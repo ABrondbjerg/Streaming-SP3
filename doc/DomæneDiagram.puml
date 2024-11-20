@@ -1,0 +1,47 @@
+@startuml
+'https://plantuml.com/class-diagram
+!pragma layout smetana
+
+
+object Bruger
+object StartMenu
+object HovedMenu
+object Film
+object Serie
+object Kategori
+object List
+object Fejl
+object BrugerNavn
+object PassWord
+object LoginInformation
+object Action
+object Se
+object Gem
+object Slet
+
+HovedMenu <-- Bruger
+HovedMenu <-- Film
+HovedMenu <-- Serie
+HovedMenu <-- Action
+LoginInformation *-- Bruger: has-a
+Bruger *-- List: has-a
+Bruger *-- BrugerNavn: has-a
+Bruger *-- PassWord: has-a
+Action *-- Bruger: has-a
+'Kategori *-- HovedMenu: has-a
+StartMenu *-- HovedMenu
+LoginInformation *-- StartMenu: has
+
+List <|-- Kategori : is - a
+List <|-- Film: is - a
+List <|-- Serie: is - a
+Kategori *-- Film: has-a
+Kategori *-- Serie: has-a
+
+'Action'
+List <|-- Action
+Action <|-- Se : is - a
+Action <|-- Gem : is - a
+Action <|-- Slet : is - a
+
+@enduml
