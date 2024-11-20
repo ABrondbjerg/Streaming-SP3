@@ -1,0 +1,64 @@
+@startuml
+!pragma layout smetana
+
+class Main{
++ static void main(String[] args)
+}
+
+class Game{
+ - String name
+ - ArrayList<Player> players
+ - Player currentPlayer
+ - TextUI ui
+ - FileIO io
+ - String playerDataPath
+ + Game(String name)
+
+ ' gamedataload, object creation, option to start new game
+ + void setUp()
+
+ 'object creation with UI
+  - void registerPlayers()
+
+  - void addPlayer(Player p)
+  + void displayPlayers()
+
+ 'new: we need a loop to manage each players' turn during the life cycle of the game
+ + void runGameLoop();
+ + void endSession()
+
+}
+
+class Player{
+- String name
+- int balance
+- final int startBalance
++ Player(String name)
++ Player(String name, int startAmount)
++ void deposit(int amount)
++ int getBalance()
++ String toString()
++ String getName()
+
+}
+class FileIO{
++ ArrayList<String> readData(String path)
++ void saveData(ArrayList<String> items, String path)
+}
+
+class TextUI{
+- Scanner scanner
++ void displayMsg(String s)
++ int promptNumeric(String msg)
++ String promptText(String msg)
++ int promptChoice(String msg, ArrayList<String> list)
+
+
+}
+
+Game *-- TextUI
+Main *-- Game
+Game *-- Player
+Game *-- FileIO
+
+@enduml
