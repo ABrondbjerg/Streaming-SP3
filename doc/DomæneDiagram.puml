@@ -14,10 +14,29 @@ object Fejl
 object BrugerNavn
 object PassWord
 object LoginInformation
-object Action
-object Se
-object Gem
-object Slet
+
+Class Action {
+
+}
+
+package "util" {
+class FileIO{
++ ArrayList<String> readUserData(String path)
++ void saveData(ArrayList<User> users, String path)
++ String[] readMovieData(String path, int length).
+}
+
+class TextUI{
+- Scanner scanner
++ void displayMsg(String s)
++ int promptNumeric(String msg)
++ String promptText(String msg)
++ int promptChoice(String msg, ArrayList<String> list)
++ boolean promptBinary(String msg )
+}
+}
+
+
 
 HovedMenu <-- Bruger
 HovedMenu <-- Film
