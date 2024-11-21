@@ -57,7 +57,6 @@ class TextUI{
 class Movies{
 - String [] moviesData
 -String [] seriesData
-- String [] showData
 - categories [] Movies
 
 }
