@@ -65,14 +65,14 @@ public class User {
 
 
     //Method that allows users to save movies of their liking.
-    public void saveMovie(Movie movie) {
+    public boolean saveMovie(Movie movie) {
         if (movie == null) {
             throw new IllegalArgumentException("Movie cannot be null");
         }
         //Adding the movie to the movieList
         movieList.add(movie);
-        //Printing out message of which movie was saved.
-        System.out.println("Movie saved: " + movie);
+        System.out.println("Movie added successfully: " + movie);
+        return true;
     }
 
     public boolean deleteMovie(Movie movie){
