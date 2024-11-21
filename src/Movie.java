@@ -42,8 +42,8 @@ public class Movie {
             String[] data = movieData.split(";");
             String title = data[0].trim();
             String year = data[1].trim();
-            String[] categoryArray = data[2].trim().split(","); // Splittet kategorierne på komma
-            double rating = Double.parseDouble(data[3].trim()); // Opret rating som double
+            String[] categoryArray = data[2].trim().split(",");
+            double rating = Double.parseDouble(data[3].trim());
 
             // Opret en liste af kategorier
             List<String> categories = new ArrayList<>();
