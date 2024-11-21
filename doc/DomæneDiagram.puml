@@ -3,15 +3,15 @@
 !pragma layout smetana
 
 
-object Bruger
-object StartMenu
-object HovedMenu
+object User
+object LoginMenu
+object MainMenu
 object Film
 object Serie
 object Kategori
 object List
 object Fejl
-object BrugerNavn
+object UserName
 object PassWord
 object LoginInformation
 object Action
@@ -19,18 +19,18 @@ object Se
 object Gem
 object Slet
 
-HovedMenu <-- Bruger
-HovedMenu <-- Film
-HovedMenu <-- Serie
-HovedMenu <-- Action
-LoginInformation *-- Bruger: has-a
-Bruger *-- List: has-a
-Bruger *-- BrugerNavn: has-a
-Bruger *-- PassWord: has-a
-Action *-- Bruger: has-a
+MainMenu <-- User
+MainMenu <-- Film
+MainMenu <-- Serie
+MainMenu <-- Action
+LoginInformation *-- User: has-a
+User *-- List: has-a
+User *-- UserName: has-a
+User *-- PassWord: has-a
+Action *-- User: has-a
 'Kategori *-- HovedMenu: has-a
-StartMenu *-- HovedMenu
-LoginInformation *-- StartMenu: has
+LoginMenu *-- MainMenu
+LoginInformation *-- LoginMenu: has
 
 List <|-- Kategori : is - a
 List <|-- Film: is - a
