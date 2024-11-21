@@ -21,10 +21,14 @@ public class User {
     }
 
     public void setUsername(String username) {
-        //Username conditions, can't have a username that is "empty"
+        //Username conditions, can't have a username that is null or empty
+        if (username == null || username.trim().isEmpty()) {
+            throw new IllegalArgumentException("Username cannot be null or empty");
+        }
+        //Username conditions, can't have a username that is "under 6 characters and over 16 characters"
         if (username.length() < 6 || username.length() > 16) {
             //If username does not meet the requirements, send a message displaying what is wrong.
-            throw new IllegalArgumentException("Username must be at least 6 characters");
+            throw new IllegalArgumentException("Username must be at least 6 characters and under 16 characters");
         }
 
         this.username = username;
@@ -36,11 +40,19 @@ public class User {
         return password;
     }
 
+
     public void setPassword(String password) {
-        //Password conditions
+        //Password conditions, can't have a password that is null or empty
+        //The password.trim() makes it so that there is no white space in the String like, space, tab, new line...."
+        //And then the isEmpty() method checks for any characters in the String
+        if (password == null || password.trim().isEmpty()) {
+            throw new IllegalArgumentException("Password cannot be null or empty");
+        }
+
+        //Password conditions, can't have a password that is under 6 characters and over 12 characters.
         if (password.length() < 6 || password.length() > 12) {
             //If password does not meet the requirements, send a message displaying what is wrong.
-            throw new IllegalArgumentException("Password must be at least 6 characters");
+            throw new IllegalArgumentException("Password must be at least 6 characters and maximum 12 characters");
         }
         //Converting the int to a String, so the method is happy.
         this.password = String.valueOf(hashPassword(password));
@@ -70,10 +82,11 @@ public class User {
         }
         if(movieList.isEmpty()){
             //If they do not have any movies saved, we say we cant find any to delete.
-            System.out.println("No movies to delete");
+            System.out.println("There are no movies in your saved list to delete");
             return false;
         }
         if (movieList.remove(movie)){
+            //If the movie is succesfully deleted, we give the user a message saying what movie was deleted.
             System.out.println("Movie deleted: " + movie);
             return true;
         }else{
