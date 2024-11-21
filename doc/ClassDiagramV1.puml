@@ -8,31 +8,42 @@ class loginMenu{
 - void registerUser()
 + login()
 }
-class MainMenu{
-+ displayMovie
-+ displayShow
-+ displayCategories
-+ displayMyList
-+ displayWatched
+class Streaming{
++ searchCategories()
++ userList()
++ displayMovie()
++ displayShow()
++ displayCategories()
++ displayMyList()
++ displayWatched()
+
 
  + void endSession()
 }
 
 class User{
 - LinkedList<List> userList
+- String name
+-String passWord
 + User(String name)
 + User(String name, passWord)
-+ String getPassWord
-+ String setPassWord
++ String getPassWord()
++ String setPassWord()
 + String getName()
 + String setName()
 + String toString()
++ save()
++ delete()
++ watch()
 }
 class FileIO{
 + ArrayList<String> readUserData(String path)
 + void saveData(ArrayList<String> items, String path)
 + ArrayList<String> readMovieData(String path)
 + ArrayList<String> readShowData(String path)
+}
+class Series{
+
 }
 
 class TextUI{
@@ -43,26 +54,23 @@ class TextUI{
 + int promptChoice(String msg, ArrayList<String> list)
 }
 
-class List{
-- String [] movieData
+class Movies{
+- String [] moviesData
+-String [] seriesData
 - String [] showData
-- categories [] Lists
-+ searchCategories
-+ userList
+- categories [] Movies
+
 }
-class Action{
-+ save
-+ delete
-+ watch
-}
+
 
 
 Main *-- loginMenu
-loginMenu *-- MainMenu
-MainMenu *-- TextUI
-MainMenu *-- List
-MainMenu *-- User
-MainMenu *-- FileIO
-User *-- Action
+loginMenu *-- Streaming
+Streaming *-- TextUI
+Streaming *-- Movies
+Streaming *-- User
+Streaming *-- FileIO
+Streaming *-- Series
+
 
 @enduml
