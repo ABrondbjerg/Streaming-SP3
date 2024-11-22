@@ -27,11 +27,11 @@ public class FileIO {
         return data;
     }
 
-    public static void saveData(List<String> items, String path, String header) {
+    public static void saveData(List<String> movies, String path, String header) {
         try {
             FileWriter writer = new FileWriter(path);
             writer.write(header + "\n"); //Giv csv filen en header
-            for (String s : items) {
+            for (String s : movies) {
                 writer.write(s + "\n"); //"Tess, 40000";
             }
             writer.close();
@@ -40,25 +40,23 @@ public class FileIO {
         }
     }
 
-    public String[] readMovieData(String path, int length) {
-        String[] data = new String[length];
+    public String[] readMovieData(String path) {
+        ArrayList<String> movies = new ArrayList<>();
         File file = new File(path);
-        int counter = 0;
 
-        try {
-            Scanner scan = new Scanner(file);
-            scan.nextLine();
+        try (Scanner scan = new Scanner(file)) {
+            if (scan.hasNextLine()) {
+                scan.nextLine(); // Skip header if present
+            }
 
             while (scan.hasNextLine()) {
                 String line = scan.nextLine();
-                data[counter] = line;
-                counter++;
+                movies.add(line);
             }
-
         } catch (FileNotFoundException e) {
-            System.out.println("File was not found");
+            System.out.println("File was not found: " + path);
         }
-        return data;
 
+        return movies.toArray(new String[0]); // Convert ArrayList to array
     }
 }
