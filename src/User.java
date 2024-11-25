@@ -1,3 +1,7 @@
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.LinkedList;
 
 
@@ -34,6 +38,23 @@ public class User {
         this.username = username;
 
     }
+/*
+    public void createUserFile() throws IOException {
+        String fileName = username + ".txt";
+        File userFile = new File(fileName);
+        Writer writer = new FileWriter(userFile);
+
+        if (!userFile.exists() && username == null || username.trim().isEmpty()) {
+            writer.write("Username: " + getUsername());
+            writer.write("\n");
+            writer.write("Password: " + setPassword());;
+            writer.close();
+        } else {
+            System.out.println("This user already exists: " + username);
+        }
+    }
+    */
+
 
     public String getPassword() {
         //Returns the stored password (hashed as a String)
@@ -74,6 +95,8 @@ public class User {
         System.out.println("Movie added successfully: " + movie);
         return true;
     }
+
+
 
     public boolean deleteMovie(Movie movie){
         if (movie == null) {
