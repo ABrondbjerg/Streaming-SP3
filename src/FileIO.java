@@ -27,16 +27,16 @@ public class FileIO {
         return data;
     }
 
-    public static void saveData(List<String> movies, String path, String header) {
-        try {
-            FileWriter writer = new FileWriter(path);
-            writer.write(header + "\n"); //Giv csv filen en header
-            for (String s : movies) {
-                writer.write(s + "\n"); //"Tess, 40000";
-            }
-            writer.close();
+    public static void saveMovieToFile(Movie movie, String filePath) {
+        try (FileWriter writer = new FileWriter(filePath, true)) { // Append mode
+            String movieData = movie.getTitle() + ";" +
+                    movie.getYear() + ";" +
+                    movie.getCategory() + ";" +
+                    movie.getRating() + ";\n";
+            writer.write(movieData);
+            System.out.println("Movie saved successfully!");
         } catch (IOException e) {
-            System.out.println("something went wrong when writing to file");
+            System.out.println("An error occurred while saving the movie: " + e.getMessage());
         }
     }
 
@@ -46,23 +46,37 @@ public class FileIO {
 
         try (Scanner scanner = new Scanner(file)) {
             while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-                String[] parts = line.split(";"); // Assuming data is semicolon-separated
-                if (parts.length == 4) {
-                    String title = parts[0].trim();
-                    int year = Integer.parseInt(parts[1].trim()); // Parse year to int
-                    String category = parts[2].trim();
-                    float rating = Float.parseFloat(parts[3].trim()); // Parse rating to float
+                String line = scanner.nextLine().trim();
 
-                    movies.add(new Movie(title, year, category, rating));
+                // Remove trailing semicolon and replace commas in ratings with periods
+                if (line.endsWith(";")) {
+                    line = line.substring(0, line.length() - 1);
+                }
+                line = line.replace(',', '.');
+
+                String[] parts = line.split(";"); // Split by semicolons
+
+                if (parts.length == 4) {
+                    try {
+                        String title = parts[0].trim();
+                        int year = Integer.parseInt(parts[1].trim());
+                        String category = parts[2].trim();
+                        float rating = Float.parseFloat(parts[3].trim());
+
+                        // Create a Movie object and add it to the list
+                        movies.add(new Movie(title, year, category, rating));
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid number format in line: " + line);
+                    }
+                } else {
+                    System.out.println("Invalid format (unexpected number of fields) in line: " + line);
                 }
             }
         } catch (FileNotFoundException e) {
             System.out.println("File not found: " + filePath);
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid format for year or rating. Please check the file.");
         }
 
         return movies;
     }
+
 }
