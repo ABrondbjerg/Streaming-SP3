@@ -60,7 +60,7 @@ public class FileIO {
                         float rating = Float.parseFloat(parts[3].trim());
 
                         // Create a Movie object and add it to the list
-                        movies.add(new Movie(title, year, category, rating));
+                        //movies.add(new Movie(title, year, category, rating));
                     } catch (NumberFormatException e) {
                         System.out.println("Invalid number format in line: " + line);
                     }

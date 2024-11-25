@@ -38,7 +38,7 @@ public class User {
         this.username = username;
 
     }
-
+/*
     public void createUserFile() throws IOException {
         String fileName = username + ".txt";
         File userFile = new File(fileName);
@@ -53,6 +53,8 @@ public class User {
             System.out.println("This user already exists: " + username);
         }
     }
+    */
+
 
     public String getPassword() {
         //Returns the stored password (hashed as a String)

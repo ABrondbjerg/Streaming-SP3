@@ -1,5 +1,7 @@
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.Scanner;
 
 public class Streaming {
@@ -11,8 +13,11 @@ public class Streaming {
 
     public static void loginOrAccount(String msg) {
         Scanner scan = new Scanner(System.in);
+        String directoryPath = "UserData";
+        System.out.println(msg);
+        String userChoice = scan.nextLine().toLowerCase();
 
-        switch (msg.toLowerCase()) {
+        switch (userChoice) {
             case "login":
                 userLogin(scan);
                 break;
@@ -31,7 +36,7 @@ public class Streaming {
             String username = scan.nextLine();
             System.out.print("Enter password: ");
             String password = scan.nextLine();
-            //Brug en brugerfil til at validere login
+
             File userFile = new File(username + ".txt");
             if (!userFile.exists()) {
                 System.out.println("User not found. Please register first.");
@@ -69,10 +74,29 @@ public class Streaming {
         }
     }
 
-    private static void saveUserToFile(User newUser) {
+    private static void saveUserToFile(User user) {
+
+        String directoryPath = "UserData";
+        File directory = new File(directoryPath);
+
+            String fileName = directoryPath + File.separator + user.getUsername() + ".txt";
+            File userFile = new File(fileName);
+
+            if (userFile.exists()) {
+                System.out.println("User already exists. Please choose a different username.");
+                return;
+            }
+
+            try (Writer writer = new FileWriter(userFile)) {
+                writer.write("Username: " + user.getUsername() + "\n");
+                writer.write("Password: " + user.getPassword() + "\n");
+            } catch (IOException e) {
+                System.out.println("An error occurred while saving the user file.");
+            }
+        }
+
     }
 
-}
 
 
 
