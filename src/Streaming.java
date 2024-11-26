@@ -77,11 +77,13 @@ public class Streaming {
             User newUser = new User(username, password);
             // Gem brugerdata i en fil
             saveUserToFile(newUser);
-            addToUserList(username, String.valueOf(password.hashCode())); //Tilføjer til fællesliste
+            addToUserList(newUser); //Tilføjer til fællesliste
             System.out.println("Registration successful! You can now log in.");
         } catch (IllegalArgumentException e) {
             // Håndter valideringsfejl
             System.out.println("Registration failed: " + e.getMessage());
+        } catch (IOException e) {
+            throw new RuntimeException(e); //SKAL HAVE KOMMENTAR TIL BRUGER
         }
     }
 
@@ -106,8 +108,8 @@ public class Streaming {
             }
         }
 
-    public static void addToUserList(String username, String hashedPassword) throws IOException {
-        File userListFile = new File("users.txt");
+    public static void addToUserList(User user) throws IOException {
+        File userListFile = new File("UserData" + File.separator + "users.txt");
 
         // Opret filen, hvis den ikke findes
         if (!userListFile.exists()) {
@@ -116,12 +118,12 @@ public class Streaming {
 
         // Tilføj brugernavn og hash-adgangskode til filen
         FileWriter writer = new FileWriter(userListFile, true); // 'true' gør, at vi skriver til filen uden at overskrive
-        writer.write("Username: " + username + ", Password: " + hashedPassword + System.lineSeparator());
+        writer.write("Username: " + user.getUsername() + ", Password: " + user.getPassword() + System.lineSeparator());
         writer.close(); // Luk filen eksplicit
     }
 
     // Movie afdeling
-
+/*
         private String movieDataPath;
         private FileIO io;
         private String movieSavePath = "ressource/myList";
@@ -269,8 +271,7 @@ public class Streaming {
                         System.out.println("Invalid choice. Please try again.");
                 }
             }
-        }
-    }
+        }*/
     }
 
 
