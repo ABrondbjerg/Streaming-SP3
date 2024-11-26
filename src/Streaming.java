@@ -38,21 +38,22 @@ public class Streaming {
                 break;
         }
     }
+
     public static boolean userLogin(Scanner scan) {
         System.out.print("Enter username: ");
         String username = scan.nextLine();
         System.out.print("Enter password: ");
         String password = scan.nextLine();
 
-        File userFile = new File("UserData" +File.separator + username + ".txt");
+        File userFile = new File("UserData" + File.separator + username + ".txt");
         if (userFile.exists()) {
             try (Scanner fileScanner = new Scanner(userFile)) {
                 String storedUsername = fileScanner.nextLine().replace("Username: ", "").trim();
                 String storedPassword = fileScanner.nextLine().replace("Password: ", "").trim();
 
                 if (username.equals(storedUsername) && String.valueOf(password.hashCode()).equals(storedPassword)) {
-                    System.out.println("Login successful! Welcome, " + username);
-                    return true; // Login succesfuldt
+                    loggedInUsername = username;  // Set the logged-in username
+                    return true;  // Login successful
                 } else {
                     System.out.println("Invalid username or password.");
                     return false; // Login fejlede
@@ -82,6 +83,9 @@ public class Streaming {
         } catch (IllegalArgumentException e) {
             // Håndter valideringsfejl
             System.out.println("Registration failed: " + e.getMessage());
+        } catch (IOException e) {
+            // Handle file writing errors
+            System.out.println("Failed to add user to list: " + e.getMessage());
         }
     }
 
@@ -90,21 +94,21 @@ public class Streaming {
         String directoryPath = "UserData";
         File directory = new File(directoryPath);
 
-            String fileName = directory + File.separator + user.getUsername() + ".txt";
-            File userFile = new File(fileName);
+        String fileName = directory + File.separator + user.getUsername() + ".txt";
+        File userFile = new File(fileName);
 
-            if (userFile.exists()) {
-                System.out.println("User already exists. Please choose a different username.");
-                return;
-            }
-
-            try (Writer writer = new FileWriter(userFile)) {
-                writer.write("Username: " + user.getUsername() + "\n");
-                writer.write("Password: " + user.getPassword() + "\n");
-            } catch (IOException e) {
-                System.out.println("An error occurred while saving the user file.");
-            }
+        if (userFile.exists()) {
+            System.out.println("User already exists. Please choose a different username.");
+            return;
         }
+
+        try (Writer writer = new FileWriter(userFile)) {
+            writer.write("Username: " + user.getUsername() + "\n");
+            writer.write("Password: " + user.getPassword() + "\n");
+        } catch (IOException e) {
+            System.out.println("An error occurred while saving the user file.");
+        }
+    }
 
     public static void addToUserList(String username, String hashedPassword) throws IOException {
         File userListFile = new File("users.txt");
@@ -121,157 +125,187 @@ public class Streaming {
     }
 
     // Movie afdeling
-
-        private String movieDataPath;
-        private FileIO io;
-        private String movieSavePath = "ressource/myList";
-        private String userFilePath = "ressource/watchedMovies";
-        private ArrayList<Movie> myList;
-        private ArrayList<Movie> watchedList;
+    public static String movieDataPath = "C:/Users/khnda/IdeaProjects/Streaming-SP3/ressource/film.txt";
+    public static FileIO io = new FileIO();
+    public static String myList = "ressource/myList";
+    public String watched = "ressource/watchedMovies";
 
 
-        public void mainStream() {
-            this.io = new FileIO();
-            this.myList = new ArrayList<>();
-            this.watchedList = new ArrayList<>();
-            this.movieDataPath = "ressource/film.txt"; // Path to the movies file
+    public static void displayMovies() {
 
+
+        // Read movie data from the file
+        ArrayList<Movie> movies = FileIO.readMovieData("ressource/film.txt");
+
+        // Check if the data was read successfully
+        if (movies != null && !movies.isEmpty()) {
+            System.out.println("Movies:");
+            for (int i = 0; i < movies.size(); i++) {
+                Movie movie = movies.get(i);
+                System.out.println((i + 1) + ". " + movie); // Call toString() of Movie
+            }
+        } else {
+            System.out.println("No movies found or error reading file.");
         }
 
-        public void displayMovies() {
-            // Read movie data from the file
-            ArrayList<Movie> movies = FileIO.readMovieData(movieDataPath);
 
-            // Check if the data was read successfully
-            if (movies != null && !movies.isEmpty()) {
-                System.out.println("Movies:");
-                for (int i = 0; i < movies.size(); i++) {
-                    Movie movie = movies.get(i);
-                    System.out.println((i + 1) + ". " + movie); // Call toString() of Movie
-                }
-            } else {
-                System.out.println("No movies found or error reading file.");
+    }
+
+
+    public static void displaySaved()    {
+
+        // Read movie data from the file
+        ArrayList<Movie> movies = FileIO.readMovieData("ressource/saved");
+
+        // Check if the data was read successfully
+        if (movies != null && !movies.isEmpty()) {
+            System.out.println("Movies:");
+            for (int i = 0; i < movies.size(); i++) {
+                Movie movie = movies.get(i);
+                System.out.println((i + 1) + ". " + movie); // Call toString() of Movie
+            }
+        } else {
+            System.out.println("No movies found or error reading file.");
+        }
+
+
+    }
+
+    public void displayWatched() {
+
+        // Read movie data from the file
+        ArrayList<Movie> movies = FileIO.readMovieData("ressource/watched");
+
+        // Check if the data was read successfully
+        if (movies != null && !movies.isEmpty()) {
+            System.out.println("Movies:");
+            for (int i = 0; i < movies.size(); i++) {
+                Movie movie = movies.get(i);
+                System.out.println((i + 1) + ". " + movie); // Call toString() of Movie
+            }
+        } else {
+            System.out.println("No movies found or error reading file.");
+        }
+    }
+
+//    public void saveMovie() {
+//        // Sample movies list from file reading
+//        ArrayList<Movie> movies = io.readMovieData(movieDataPath);  // Read movies from file
+//        Scanner scanner = new Scanner(System.in);
+//
+//        // Ask for the movie index
+//        System.out.print("Enter the movie number to add to your list: ");
+//        int movieIndex = scanner.nextInt();
+//        int adjustedIndex = movieIndex - 1; // Adjust index for 1-based input
+//
+//        if (adjustedIndex >= 0 && adjustedIndex < movies.size()) {
+//            Movie selectedMovie = movies.get(adjustedIndex);
+//            myList.add(selectedMovie);  // Add selected movie to myList
+//            System.out.println("Added movie: " + selectedMovie.getTitle());
+//
+//            // Optionally, save the selected movie to a file
+//            String userFilePath = "ressource/movie_list.txt";  // File to save movie list
+//            try (FileWriter writer = new FileWriter(userFilePath, true)) {  // true for appending
+//                writer.write(selectedMovie.getTitle() + "; " + selectedMovie.getYear() + "; " + String.join(", ", selectedMovie.getCategories()) + "; " + selectedMovie.getRating() + ";\n");
+//                System.out.println("Movie saved to " + userFilePath);
+//            } catch (IOException e) {
+//                System.out.println("Error saving movie to file: " + e.getMessage());
+//            }
+//        } else {
+//            System.out.println("Invalid movie index. Please try again.");
+//        }
+//    }
+
+//        public void playMovie() {
+//            // Get user input for movie index
+//            Scanner scanner = new Scanner(System.in);
+//
+//            System.out.print("Enter the movie number to add to your list: ");
+//            int movieIndex = scanner.nextInt(); // Get the movie index from the user
+//
+//            // Adjust index since the list is 0-based but the user is selecting 1-based
+//            int adjustedIndex = movieIndex - 1; // User selects starting from 1
+//
+//            // Read movie data from the file
+//            ArrayList<Movie> movies = io.readMovieData(movieDataPath);
+//
+//            if (adjustedIndex >= 0 && adjustedIndex < movies.size()) {
+//                Movie selectedMovie = movies.get(adjustedIndex);
+//                myList.add(selectedMovie);  // Add to the selected list (myList)
+//                System.out.println("You have watched:" + selectedMovie.getTitle());
+//                System.out.println("Added movie: " + selectedMovie.getTitle());
+//
+//                // Save the selected movie to the user's file immediately after adding it
+//                try (FileWriter writer = new FileWriter(userFilePath, true)) {  // 'true' to append to the file
+//                    writer.write(selectedMovie.getTitle() + "; " + selectedMovie.getYear() + "; " + selectedMovie.getCategories() + "; " + selectedMovie.getRating() + ";\n");
+//                    System.out.println("Movie saved to " + userFilePath);
+//                } catch (IOException e) {
+//                    System.out.println("Error saving movie to file: " + e.getMessage());
+//                }
+//            } else {
+//                System.out.println("Invalid movie index. Please try again.");
+//            }
+//        }
+
+
+    private static String loggedInUsername = null;
+
+    public static void searchTitle() {
+        // Check if the user is logged in
+        if (loggedInUsername == null) {
+            System.out.println("You must log in first.");
+            return;  // Exit if no user is logged in
+        }
+
+        boolean found = false; // Initially, assume no movie is found
+        Scanner scanner = new Scanner(System.in);
+        ArrayList<Movie> movies = io.readMovieData(movieDataPath);
+
+        // Ask the user for the title keyword
+        System.out.print("Enter the title of the movie: ");
+        String keyword = scanner.nextLine();
+
+        // Loop through the movies to check for a match
+        for (int i = 0; i < movies.size(); i++) {
+            Movie movie = movies.get(i);
+            // Check if the movie's title contains the keyword (case-insensitive)
+            if (movie.getTitle().toLowerCase().contains(keyword.toLowerCase())) {
+                System.out.println((i + 1) + ". " + movie);  // Print the matching movie with an index
+                found = true;  // A movie was found, so set found to true
             }
         }
 
-        public void saveMovie() {
+        // If no movies were found
+        if (!found) {
+            System.out.println("No movies found with the title containing: " + keyword);
+        } else {
+            // Ask if the user wants to save a movie
+            System.out.print("Do you want to save any of these movies? (yes/no): ");
+            String response = scanner.nextLine();
 
-            // Get user input for movie index
-            Scanner scanner = new Scanner(System.in);
-            System.out.print("Enter your username: ");
-            String username = scanner.nextLine();  // Get the username from the user
+            if (response.equalsIgnoreCase("yes")) {
+                System.out.print("Enter the number of the movie you want to save: ");
+                int movieNumber = scanner.nextInt();
 
-            System.out.print("Enter the movie number to add to your list: ");
-            int movieIndex = scanner.nextInt(); // Get the movie index from the user
+                if (movieNumber > 0 && movieNumber <= movies.size()) {
+                    Movie selectedMovie = movies.get(movieNumber - 1);
 
-            // Adjust index since the list is 0-based but the user is selecting 1-based
-            int adjustedIndex = movieIndex - 1; // User selects starting from 1
+                    // Save the movie to the logged-in user's file
 
-            // Read movie data from the file
-            ArrayList<Movie> movies = io.readMovieData(movieDataPath);
-
-            // Check if the index is valid and add the movie to myList
-            if (adjustedIndex >= 0 && adjustedIndex < movies.size()) {
-                Movie selectedMovie = movies.get(adjustedIndex);
-                myList.add(selectedMovie);  // Add to the selected list (myList)
-                System.out.println("Added movie: " + selectedMovie.getTitle());
-
-                // Create a new text file for the user (e.g., "Username.txt")
-                String userFilePath = "ressource/" + username + "_movie_list.txt"; // Create a path based on username
-
-                // Save the selected movie to the user's file immediately after adding it
-                try (FileWriter writer = new FileWriter(userFilePath, true)) {  // 'true' to append to the file
-                    writer.write(selectedMovie.getTitle() + "; " + selectedMovie.getYear() + "; " + selectedMovie.getCategory() + "; " + selectedMovie.getRating() + ";\n");
-                    System.out.println("Movie saved to " + userFilePath);
-                } catch (IOException e) {
-                    System.out.println("Error saving movie to file: " + e.getMessage());
-                }
-            } else {
-                System.out.println("Invalid movie index. Please try again.");
-            }
-        }
-
-        public void playMovie() {
-            // Get user input for movie index
-            Scanner scanner = new Scanner(System.in);
-
-            System.out.print("Enter the movie number to add to your list: ");
-            int movieIndex = scanner.nextInt(); // Get the movie index from the user
-
-            // Adjust index since the list is 0-based but the user is selecting 1-based
-            int adjustedIndex = movieIndex - 1; // User selects starting from 1
-
-            // Read movie data from the file
-            ArrayList<Movie> movies = io.readMovieData(movieDataPath);
-
-            if (adjustedIndex >= 0 && adjustedIndex < movies.size()) {
-                Movie selectedMovie = movies.get(adjustedIndex);
-                myList.add(selectedMovie);  // Add to the selected list (myList)
-                System.out.println("You have watched:" + selectedMovie.getTitle());
-                System.out.println("Added movie: " + selectedMovie.getTitle());
-
-                // Save the selected movie to the user's file immediately after adding it
-                try (FileWriter writer = new FileWriter(userFilePath, true)) {  // 'true' to append to the file
-                    writer.write(selectedMovie.getTitle() + "; " + selectedMovie.getYear() + "; " + selectedMovie.getCategory() + "; " + selectedMovie.getRating() + ";\n");
-                    System.out.println("Movie saved to " + userFilePath);
-                } catch (IOException e) {
-                    System.out.println("Error saving movie to file: " + e.getMessage());
-                }
-            } else {
-                System.out.println("Invalid movie index. Please try again.");
-            }
-        }
-
-        public void searchTitle() {
-
-            displayMovies();
-
-            boolean found = true;
-            boolean running = true;
-
-            Scanner scanner = new Scanner(System.in);
-            ArrayList<Movie> movies = io.readMovieData(movieDataPath);
-
-            System.out.print("Enter the title of the movie: ");
-            String keyword = scanner.nextLine();
-            for (Movie movie : movies) {
-                // Check if the movie's title contains the keyword (case-insensitive)
-                if (movie.getTitle().toLowerCase().contains(keyword.toLowerCase())) {
-                    System.out.println("Found: " + movie);
-                    found = true;
-                }
-            }
-            if (!found) {
-                System.out.println("No movies found with the title containing: " + keyword);
-            }
-
-            while (running) {
-                System.out.println("\n--- Movie Menu ---");
-                System.out.println("1. Watch Movie");
-                System.out.println("2. Play Movie");
-                System.out.println("3. Exit");
-                System.out.print("Choose an option: ");
-                int choice = scanner.nextInt();
-                scanner.nextLine(); // Consume newline character
-
-                switch (choice) {
-                    case 1: // Watch Movie
-                        playMovie();
-                        break;
-                    case 2: // Save Movie
-                        saveMovie();
-                        break;
-                    case 3: // Exit
-                        System.out.println("Exiting... Goodbye!");
-                        running = false;
-                        break;
-                    default:
-                        System.out.println("Invalid choice. Please try again.");
+                    String userFilePath = "UserData/" + loggedInUsername;
+                    String fileName = loggedInUsername + ".txt";
+                    FileIO.saveMovieToFile(selectedMovie, userFilePath); // Save to the user-specific file
+                    System.out.println("Movie saved: " + selectedMovie.getTitle());
+                } else {
+                    System.out.println("Invalid movie number.");
                 }
             }
         }
     }
-    }
+}
+
+
+
 
 
 

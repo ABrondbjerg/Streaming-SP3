@@ -4,11 +4,11 @@ import java.util.List;
     public class Movie {
         private String title;
         private String year;
-        private List<String> categories;
+        private String[] categories;
         private double rating;
 
         // Konstruktør
-        public Movie(String title, String year, List<String> categories, double rating) {
+        public Movie(String title, String year, String[] categories, double rating) {
             this.title = title;
             this.year = year;
             this.categories = categories;
@@ -24,7 +24,7 @@ import java.util.List;
             return year;
         }
 
-        public List<String> getCategories() {
+        public String[] getCategories() {
             return categories;
         }
 
@@ -34,29 +34,36 @@ import java.util.List;
 
         // Metode til at oprette film fra data
 
-        public static List<Movie> createMovies(String[] moviedata) {
-            List<Movie> movies = new ArrayList<>();
+//        public static List<Movie> createMovies(String[] moviedata) {
+//            List<Movie> movies = new ArrayList<>();
+//
+//            for (String movieData : moviedata) {
+//
+//                String[] data = movieData.split(";");
+//                String title = data[0].trim();
+//                String year = data[1].trim();
+//                String[] categories = data[2].trim().split(",");
+//                double rating = Double.parseDouble(data[3].trim());
+//
+////                // Opret en liste af kategorier
+////                List<String> categories = new ArrayList<>();
+////                for (String category : categoryArray) {
+////                    categories.add(category.trim());
+////                }
+//
+////                // Opret og tilføj film til listen
+////                Movie movie = new Movie(title, year, categories, rating);
+////                movies.add(movie);
+//            }
+//
+//            return movies; // Returner listen af film
+//        }
 
-            for (String movieData : moviedata) {
-
-                String[] data = movieData.split(";");
-                String title = data[0].trim();
-                String year = data[1].trim();
-                String[] categoryArray = data[2].trim().split(",");
-                double rating = Double.parseDouble(data[3].trim());
-
-                // Opret en liste af kategorier
-                List<String> categories = new ArrayList<>();
-                for (String category : categoryArray) {
-                    categories.add(category.trim());
-                }
-
-                // Opret og tilføj film til listen
-                Movie movie = new Movie(title, year, categories, rating);
-                movies.add(movie);
-            }
-
-            return movies; // Returner listen af film
+        @Override
+        public String toString() {
+            // Assuming 'title' and 'year' are Strings, and 'rating' is a double
+            return String.format("Title: %s, Year: %s, Categories: %s, Rating: %.2f",
+                    title, year, String.join(", ", categories), rating);
         }
     }
 
