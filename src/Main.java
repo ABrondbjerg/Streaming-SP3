@@ -4,6 +4,7 @@ public class Main {
         Streaming.startStream();
         Streaming.loginOrAccount("Login or register account:");
 
+        Display.displayMenu();
 
 
         // Login metode herunder:
