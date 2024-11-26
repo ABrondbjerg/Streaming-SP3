@@ -102,7 +102,7 @@ public class Streaming {
 
             try (Writer writer = new FileWriter(userFile)) {
                 writer.write("Username: " + user.getUsername() + "\n");
-                writer.write("Password: " + user.getPassword() + "\n");
+               writer.write("Password: " + user.getPassword() + "\n");
             } catch (IOException e) {
                 System.out.println("An error occurred while saving the user file.");
             }
