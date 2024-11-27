@@ -188,7 +188,6 @@ public class Streaming {
     public static String movieDataPath = "ressource/film.txt";
     public static FileIO io = new FileIO();
 
-    private static String loggedInUsername;
 
     public static void searchTitle() {
 

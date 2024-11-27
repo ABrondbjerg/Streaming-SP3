@@ -61,7 +61,7 @@ public class FileIO {
                     try {
                         String title = parts[0].trim();
                         String year = parts[1].trim();
-                        String[] categories = parts[2].trim().split(",");
+                        List<String> categories = List.of(parts[2].trim().split(","));
                         double rating = Float.parseFloat(parts[3].trim());
                         Movie movie = new Movie(title, year, categories, rating);
                         movies.add(movie);

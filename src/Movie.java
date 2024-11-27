@@ -1,14 +1,13 @@
-import java.util.ArrayList;
 import java.util.List;
 
     public class Movie {
         private String title;
         private String year;
-        private String[] categories;
+        private List<String> categories;
         private double rating;
 
         // Konstruktør
-        public Movie(String title, String year, String[] categories, double rating) {
+        public Movie(String title, String year, List<String> categories, double rating) {
             this.title = title;
             this.year = year;
             this.categories = categories;
@@ -24,7 +23,7 @@ import java.util.List;
             return year;
         }
 
-        public String[] getCategories() {
+        public List<String> getCategories() {
             return categories;
         }
 
