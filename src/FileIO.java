@@ -24,13 +24,7 @@ public class FileIO {
     }
 
 
-    public void playMovie(Movie movie);{
-
-
-
-    }
-
-    public void saveMovieToFile(Movie movie) {
+    public static void saveMovieToFile(Movie movie) {
 
         String filePath = "UserData" + File.separator + "movies.txt";
 
@@ -49,7 +43,6 @@ public class FileIO {
             System.out.println("An error occurred while saving the movie: " + e.getMessage());
         }
     }
-
 
 
     public static ArrayList<Movie> readMovieData(String filePath) {
@@ -82,11 +75,37 @@ public class FileIO {
             }
         } catch (FileNotFoundException e) {
             System.out.println("File not found: " + filePath);
-        } catch (IOException e) {
-            System.out.println("Error reading the file: " + e.getMessage());
         }
-        return movies;
-    }
+            return movies;
+        }
+
+        public static void playMovie(Movie movie) {
+
+                ArrayList<Movie> myList = new ArrayList<>();
+
+                // Get user input for movie index
+                Scanner scanner = new Scanner(System.in);
+
+                System.out.print("Enter the movie number to add to your list: ");
+                int movieIndex = scanner.nextInt(); // Get the movie index from the user
+
+                // Adjust index since the list is 0-based but the user is selecting 1-based
+                int adjustedIndex = movieIndex - 1; // User selects starting from 1
+
+                // Read movie data from the file
+                ArrayList<Movie> movies = readMovieData("ressource/film.txt");
+
+                if (adjustedIndex >= 0 && adjustedIndex < movies.size()) {
+                    Movie selectedMovie = movies.get(adjustedIndex);
+                    myList.add(selectedMovie);  // Add to the selected list (myList)
+                    System.out.println("You have watched:" + selectedMovie.getTitle());
+                    System.out.println("Added movie: " + selectedMovie.getTitle());
+
+                    // Save the selected movie to the user's file immediately after adding it
+                    saveMovieToFile(selectedMovie);
+                }
+            }
 
 
-}
+        }
+

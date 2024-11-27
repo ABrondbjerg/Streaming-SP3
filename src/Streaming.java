@@ -125,14 +125,11 @@ public class Streaming {
     }
 
     // Movie afdeling
-    public static String movieDataPath = "C:/Users/khnda/IdeaProjects/Streaming-SP3/ressource/film.txt";
-    public static FileIO io = new FileIO();
-    public static String myList = "ressource/myList";
-    public String watched = "ressource/watchedMovies";
+
+
 
 
     public static void displayMovies() {
-
 
         // Read movie data from the file
         ArrayList<Movie> movies = FileIO.readMovieData("ressource/film.txt");
@@ -187,49 +184,14 @@ public class Streaming {
             System.out.println("No movies found or error reading file.");
         }
     }
-//
-//        public void playMovie() {
-//            // Get user input for movie index
-//            Scanner scanner = new Scanner(System.in);
-//
-//            System.out.print("Enter the movie number to add to your list: ");
-//            int movieIndex = scanner.nextInt(); // Get the movie index from the user
-//
-//            // Adjust index since the list is 0-based but the user is selecting 1-based
-//            int adjustedIndex = movieIndex - 1; // User selects starting from 1
-//
-//            // Read movie data from the file
-//            ArrayList<Movie> movies = io.readMovieData(movieDataPath);
-//
-//            if (adjustedIndex >= 0 && adjustedIndex < movies.size()) {
-//                Movie selectedMovie = movies.get(adjustedIndex);
-//                myList.add(selectedMovie);  // Add to the selected list (myList)
-//                System.out.println("You have watched:" + selectedMovie.getTitle());
-//                System.out.println("Added movie: " + selectedMovie.getTitle());
-//
-//                // Save the selected movie to the user's file immediately after adding it
-//                try (FileWriter writer = new FileWriter(userFilePath, true)) {  // 'true' to append to the file
-//                    writer.write(selectedMovie.getTitle() + "; " + selectedMovie.getYear() + "; " + selectedMovie.getCategories() + "; " + selectedMovie.getRating() + ";\n");
-//                    System.out.println("Movie saved to " + userFilePath);
-//                } catch (IOException e) {
-//                    System.out.println("Error saving movie to file: " + e.getMessage());
-//                }
-//            } else {
-//                System.out.println("Invalid movie index. Please try again.");
-//            }
-//        }
-//
 
+    public static String movieDataPath = "ressource/film.txt";
+    public static FileIO io = new FileIO();
 
-
-    private static String loggedInUsername = null;
+    private static String loggedInUsername;
 
     public static void searchTitle() {
-        // Check if the user is logged in
-        if (loggedInUsername == null) {
-            System.out.println("You must log in first.");
-            return;  // Exit if no user is logged in
-        }
+
 
         boolean found = false; // Initially, assume no movie is found
         Scanner scanner = new Scanner(System.in);
@@ -252,14 +214,17 @@ public class Streaming {
         if (!found) {
             System.out.println("No movies found with the title containing: " + keyword);
         } else {
+            // Ask the user to choose a movie
             System.out.print("Enter the number of the movie you want to save: ");
             int movieNumber = scanner.nextInt();
 
+            // Ensure the number is valid and corresponds to a movie
             if (movieNumber > 0 && movieNumber <= movies.size()) {
-                Movie selectedMovie = movies.get(movieNumber - 1);
+                Movie selectedMovie = movies.get(movieNumber - 1);  // Select the movie
 
-                // Call saveMovie with the selected movie
-                io.saveMovieToFile(selectedMovie);
+                // Call saveMovieToFile with the selected movie
+                io.saveMovieToFile(selectedMovie);  // Save the selected movie to file
+                System.out.println("Movie saved: " + selectedMovie.getTitle());
             } else {
                 System.out.println("Invalid movie number.");
             }
