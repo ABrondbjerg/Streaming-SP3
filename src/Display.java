@@ -14,9 +14,9 @@ public class Display {
             System.out.println("3. Show Categories");
             System.out.println("4. Top 5 Movies");
             System.out.println("5. Exit");
-
+            System.out.println("\nPlease choose an option, by pressing the correlating number: ");
             String choice = scan.nextLine();
-            System.out.println("please choose an option, by pressing the correlating number ");
+
 
             switch (choice) {
                 case "1" -> displayMyListMenu();
@@ -41,6 +41,8 @@ public class Display {
             System.out.println("2. Remove a Movie");
             System.out.println("3. Back to Main Menu");
 
+            System.out.println("\nPlease choose an option, by pressing the correlating number: ");
+
             String choice = scan.nextLine();
             switch (choice) {
                 case "1" -> System.out.println("Feature to view saved movies coming soon!");
@@ -61,6 +63,8 @@ public class Display {
             System.out.println("1. Watch Movies");
             System.out.println("2. Remove a Movie");
             System.out.println("3. Back to Main Menu");
+
+            System.out.println("\nPlease choose an option, by pressing the correlating number: ");
 
             String choice = scan.nextLine();
             switch (choice) {
@@ -88,7 +92,7 @@ public class Display {
         }
 
         // Brugeren vælger en kategori
-        System.out.print("Choose a category: ");
+        System.out.print("Choose a category by typing it in: ");
         Scanner scan = new Scanner(System.in);
         String choice = scan.nextLine().trim();
 
