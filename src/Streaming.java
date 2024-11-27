@@ -188,33 +188,21 @@ public class Streaming {
         }
     }
 
-//    public void saveMovie() {
-//        // Sample movies list from file reading
-//        ArrayList<Movie> movies = io.readMovieData(movieDataPath);  // Read movies from file
-//        Scanner scanner = new Scanner(System.in);
-//
-//        // Ask for the movie index
-//        System.out.print("Enter the movie number to add to your list: ");
-//        int movieIndex = scanner.nextInt();
-//        int adjustedIndex = movieIndex - 1; // Adjust index for 1-based input
-//
-//        if (adjustedIndex >= 0 && adjustedIndex < movies.size()) {
-//            Movie selectedMovie = movies.get(adjustedIndex);
-//            myList.add(selectedMovie);  // Add selected movie to myList
-//            System.out.println("Added movie: " + selectedMovie.getTitle());
-//
-//            // Optionally, save the selected movie to a file
-//            String userFilePath = "ressource/movie_list.txt";  // File to save movie list
-//            try (FileWriter writer = new FileWriter(userFilePath, true)) {  // true for appending
-//                writer.write(selectedMovie.getTitle() + "; " + selectedMovie.getYear() + "; " + String.join(", ", selectedMovie.getCategories()) + "; " + selectedMovie.getRating() + ";\n");
-//                System.out.println("Movie saved to " + userFilePath);
-//            } catch (IOException e) {
-//                System.out.println("Error saving movie to file: " + e.getMessage());
-//            }
-//        } else {
-//            System.out.println("Invalid movie index. Please try again.");
-//        }
-//    }
+    public static void saveMovie(Movie selectedMovie) {
+        ArrayList<Movie> myList = new ArrayList<>();
+        myList.add(selectedMovie);  // Add selected movie to myList
+        System.out.println("Added movie: " + selectedMovie.getTitle());
+
+        // Save the selected movie to a file
+        String userFilePath = "UserData/" + loggedInUsername + ".txt";  // File to save movie list
+        try (FileWriter writer = new FileWriter(userFilePath, true)) {  // true for appending
+            writer.write(selectedMovie.getTitle() + "; " + selectedMovie.getYear() + "; " +
+                    String.join(", ", selectedMovie.getCategories()) + "; " + selectedMovie.getRating() + ";\n");
+            System.out.println("Movie saved to " + userFilePath);
+        } catch (IOException e) {
+            System.out.println("Error saving movie to file: " + e.getMessage());
+        }
+    }
 
 //        public void playMovie() {
 //            // Get user input for movie index
@@ -246,6 +234,8 @@ public class Streaming {
 //                System.out.println("Invalid movie index. Please try again.");
 //            }
 //        }
+//
+//
 
 
     private static String loggedInUsername = null;
@@ -279,30 +269,22 @@ public class Streaming {
         if (!found) {
             System.out.println("No movies found with the title containing: " + keyword);
         } else {
-            // Ask if the user wants to save a movie
-            System.out.print("Do you want to save any of these movies? (yes/no): ");
-            String response = scanner.nextLine();
+            System.out.print("Enter the number of the movie you want to save: ");
+            int movieNumber = scanner.nextInt();
 
-            if (response.equalsIgnoreCase("yes")) {
-                System.out.print("Enter the number of the movie you want to save: ");
-                int movieNumber = scanner.nextInt();
+            if (movieNumber > 0 && movieNumber <= movies.size()) {
+                Movie selectedMovie = movies.get(movieNumber - 1);
 
-                if (movieNumber > 0 && movieNumber <= movies.size()) {
-                    Movie selectedMovie = movies.get(movieNumber - 1);
-
-                    // Save the movie to the logged-in user's file
-
-                    String userFilePath = "UserData/" + loggedInUsername;
-                    String fileName = loggedInUsername + ".txt";
-                    FileIO.saveMovieToFile(selectedMovie, userFilePath); // Save to the user-specific file
-                    System.out.println("Movie saved: " + selectedMovie.getTitle());
-                } else {
-                    System.out.println("Invalid movie number.");
-                }
+                // Call saveMovie with the selected movie
+                saveMovie(selectedMovie);
+            } else {
+                System.out.println("Invalid movie number.");
             }
         }
     }
+
 }
+
 
 
 

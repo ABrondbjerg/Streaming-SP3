@@ -4,7 +4,7 @@ public class Main {
 //        Streaming.startStream();
         Streaming.loginOrAccount("Login or register account:");
         Streaming.searchTitle();
-        Streaming.searchTitle();
+
 
 
 
