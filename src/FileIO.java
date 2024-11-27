@@ -24,7 +24,16 @@ public class FileIO {
     }
 
 
-    public static void saveMovieToFile(Movie movie, String filePath) {
+    public void playMovie(Movie movie);{
+
+
+
+    }
+
+    public void saveMovieToFile(Movie movie) {
+
+        String filePath = "UserData" + File.separator + "movies.txt";
+
         try (FileWriter writer = new FileWriter(filePath, true)) { // Append mode
             // Ensure categories is not null and join them with ". "
             String categoriesString = movie.getCategories() != null ? String.join(". ", movie.getCategories()) : "";

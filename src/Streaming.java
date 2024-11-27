@@ -187,23 +187,7 @@ public class Streaming {
             System.out.println("No movies found or error reading file.");
         }
     }
-
-    public static void saveMovie(Movie selectedMovie) {
-        ArrayList<Movie> myList = new ArrayList<>();
-        myList.add(selectedMovie);  // Add selected movie to myList
-        System.out.println("Added movie: " + selectedMovie.getTitle());
-
-        // Save the selected movie to a file
-        String userFilePath = "UserData/" + loggedInUsername + ".txt";  // File to save movie list
-        try (FileWriter writer = new FileWriter(userFilePath, true)) {  // true for appending
-            writer.write(selectedMovie.getTitle() + "; " + selectedMovie.getYear() + "; " +
-                    String.join(", ", selectedMovie.getCategories()) + "; " + selectedMovie.getRating() + ";\n");
-            System.out.println("Movie saved to " + userFilePath);
-        } catch (IOException e) {
-            System.out.println("Error saving movie to file: " + e.getMessage());
-        }
-    }
-
+//
 //        public void playMovie() {
 //            // Get user input for movie index
 //            Scanner scanner = new Scanner(System.in);
@@ -235,7 +219,7 @@ public class Streaming {
 //            }
 //        }
 //
-//
+
 
 
     private static String loggedInUsername = null;
@@ -246,7 +230,6 @@ public class Streaming {
             System.out.println("You must log in first.");
             return;  // Exit if no user is logged in
         }
-
 
         boolean found = false; // Initially, assume no movie is found
         Scanner scanner = new Scanner(System.in);
@@ -265,7 +248,6 @@ public class Streaming {
                 found = true;  // A movie was found, so set found to true
             }
         }
-
         // If no movies were found
         if (!found) {
             System.out.println("No movies found with the title containing: " + keyword);
@@ -277,13 +259,12 @@ public class Streaming {
                 Movie selectedMovie = movies.get(movieNumber - 1);
 
                 // Call saveMovie with the selected movie
-                saveMovie(selectedMovie);
+                io.saveMovieToFile(selectedMovie);
             } else {
                 System.out.println("Invalid movie number.");
             }
         }
     }
-
 }
 
 
