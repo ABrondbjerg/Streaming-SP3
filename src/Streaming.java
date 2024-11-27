@@ -39,6 +39,7 @@ public class Streaming {
         }
     }
     public static boolean userLogin(Scanner scan) {
+
         System.out.print("Enter username: ");
         String username = scan.nextLine();
         System.out.print("Enter password: ");
@@ -68,8 +69,10 @@ public class Streaming {
 
 
     private static void userRegistration(Scanner scan) {
+        System.out.println("Username must be between 6 and 16 characters.");
         System.out.print("Enter username: ");
         String username = scan.nextLine();
+        System.out.println("Password must be between 6 and 12 characters.");
         System.out.print("Enter password: ");
         String password = scan.nextLine();
         try {

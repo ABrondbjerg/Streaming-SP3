@@ -16,6 +16,7 @@ public class Display {
             System.out.println("5. Exit");
 
             String choice = scan.nextLine();
+            System.out.println("please choose an option, by pressing the correlating number ");
 
             switch (choice) {
                 case "1" -> displayMyListMenu();
