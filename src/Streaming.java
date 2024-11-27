@@ -247,6 +247,7 @@ public class Streaming {
             return;  // Exit if no user is logged in
         }
 
+
         boolean found = false; // Initially, assume no movie is found
         Scanner scanner = new Scanner(System.in);
         ArrayList<Movie> movies = io.readMovieData(movieDataPath);
