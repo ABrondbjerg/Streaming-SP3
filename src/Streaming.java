@@ -12,7 +12,6 @@ public class Streaming {
         TextUI textUI = new TextUI();
         textUI.displayMsg("Welcome to MouseGun Streams");
     }
-// Lav user/bruger
 
     public static void loginOrAccount(String msg) {
         Scanner scan = new Scanner(System.in);
@@ -21,10 +20,14 @@ public class Streaming {
 
         switch (userChoice) {
             case "login":
-                if (!userLogin(scan)) { // Hvis login fejler
-                    System.out.println("Redicting to registration");
-                    userRegistration(scan); // Gå til registrering
-                    userLogin(scan); // Log ind efter registrering
+                if (userLogin(scan)) {
+                    // Hvis login lykkes, stop her
+                    break;
+                } else {
+                    // Hvis login fejler, redirect til registrering
+                    System.out.println("Redirecting to registration...");
+                    userRegistration(scan);
+                    userLogin(scan); // Forsøg login efter registrering
                 }
                 break;
 
@@ -103,8 +106,9 @@ public class Streaming {
 
             try (Writer writer = new FileWriter(userFile)) {
                 writer.write("Username: " + user.getUsername() + "\n");
+                writer.write("Password: " + user.getPassword() + "\n");
                writer.write("Saved Movies: ");
-               System.out.println("User file created: " + userFile.getAbsolutePath());
+               //System.out.println("User file created: " + userFile.getAbsolutePath()); //Debug sti.
 
             } catch (IOException e) {
                 System.out.println("An error occurred while saving the user file.");
@@ -118,11 +122,6 @@ public class Streaming {
 
         String fileName = directory + File.separator + user.getUsername() + "_watched.txt";
         File userWatchedFile = new File(fileName);
-
-        if (userWatchedFile.exists()) {
-            System.out.println("User already exists. Please choose a different username.");
-            return;
-        }
 
         try (Writer writer = new FileWriter(userWatchedFile)) {
             writer.write("Username: " + user.getUsername() + "\n");
@@ -194,9 +193,28 @@ public class Streaming {
         }
     }
 
-    public void playMovie(){
+    public void playMovie(String selectedMovie, User user) throws IOException {
+        TextUI textUI = new TextUI();
+        textUI.displayMsg("You are now watching: " + selectedMovie);
 
+        // Sørg for at bruge brugerens rigtige filnavn (brug currentUser.getUsername())
+        String fileName = "UserData" + File.separator + user.getUsername() + "_watched.txt";
+        File userWatchedFile = new File(fileName);
+
+        // Sørg for at oprette filen, hvis den ikke allerede findes
+        if (!userWatchedFile.exists()) {
+            userWatchedFile.createNewFile();
+        }
+
+        try (FileWriter writer = new FileWriter(userWatchedFile, true)) { // Appender til filen
+            writer.write(selectedMovie + "\n");
+            System.out.println("Movie saved to your watched list: " + selectedMovie);
+        } catch (IOException e) {
+            System.out.println("An error occurred while saving the movie: " + e.getMessage());
+        }
     }
+
+
 }
 
 

@@ -1,10 +1,11 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.*;
 
 public class Display {
 
-    public static void displayMenu() throws FileNotFoundException {
+    public static void displayMenu() throws IOException {
         Scanner scan = new Scanner(System.in);
 
         while (true) {
@@ -76,7 +77,7 @@ public class Display {
         }
     }
 
-    private static void displayCategories() throws FileNotFoundException {
+    private static void displayCategories() throws IOException {
         TextUI ui = new TextUI();
         List<Movie> movies = Movie.createMovies("ressource" + File.separator + "film.txt");
 
@@ -128,11 +129,12 @@ public class Display {
                 System.out.println("3: Exit to main menu");
                 FileIO io = new FileIO();
                 int actionChoice = scanner.nextInt();
+                Streaming streaming = new Streaming();
+                User currentUser = new User("username", "password");
 
                 switch (actionChoice) {
                     case 1:
-                        // Se filmen (forudsat at metoden allerede findes)
-                        //selectedMovie.watch(); // Metoden skal eksistere i Movie-klassen
+                        streaming.playMovie(selectedMovie.getTitle(), currentUser);
                         break;
                     case 2:
                         // Gem filmen (forudsat at metoden allerede findes)
@@ -151,9 +153,10 @@ public class Display {
             }
         }
     }
-    private static void displayTop5Movies() throws FileNotFoundException {
+    private static void displayTop5Movies() throws IOException {
         Scanner scanner = new Scanner(System.in);
         List<Movie> movies = Movie.createMovies("ressource" + File.separator + "film.txt");
+
         // Udskriv top 5 film
         System.out.println("\n--- Top 5 Movies ---");
         for (int i = 0; i < 5; i++) {
@@ -167,40 +170,42 @@ public class Display {
         // Tjek for gyldig input
         if (movieChoice < 1 || movieChoice > movies.size()) {
             System.out.println("Invalid choice. Returning to main menu.");
+            return; // Vi stopper funktionen her, hvis valget er ugyldigt.
         } else {
             Movie selectedMovie = movies.get(movieChoice - 1);
             System.out.println(selectedMovie.getTitle() + " (" + selectedMovie.getYear() + ")");
         }
+
         boolean stayInMenu = true;
         while (stayInMenu) {
             System.out.println("Choose an option:");
             System.out.println("1: Watch movie");
             System.out.println("2: Save movie");
             System.out.println("3: Exit to main menu");
+
+            int actionChoice = scanner.nextInt();
+
             FileIO io = new FileIO();
-            Scanner scan = new Scanner(System.in);
-            int actionChoice = scan.nextInt();
-            Movie selectedMovie = movies.getLast();
+            Streaming streaming = new Streaming();
+            User currentUser = getCurrentUser(); // Sørg for at få den korrekte bruger her.
 
             switch (actionChoice) {
                 case 1:
-                    // Se filmen (forudsat at metoden allerede findes)
-                    //selectedMovie.watch(); // Metoden skal eksistere i Movie-klassen
+                    streaming.playMovie(selectedMovie.getTitle(), currentUser);
                     break;
                 case 2:
-                    // Gem filmen (forudsat at metoden allerede findes)
                     io.saveMovieToFile(selectedMovie);
                     System.out.println(selectedMovie.getTitle() + " has been saved!");
                     break;
                 case 3:
-                    // Exit til hovedmenu
                     stayInMenu = false;
                     System.out.println("Returning to main menu.");
-                    displayMenu();
+                    displayMenu(); // Hovedmenuen skal vises igen.
                     break;
                 default:
                     System.out.println("Invalid option. Please choose again.");
             }
         }
     }
+
 }
