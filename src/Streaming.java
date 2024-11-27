@@ -262,7 +262,7 @@ public class Streaming {
                             } else {
                                 System.out.println("Invalid movie index. Please try again.");
                             }
-                            //Sletter filmen fra mylist
+                            //Sletter filmen fra my List
                             if (adjustedIndex >= 0 && adjustedIndex < movies.size()) {
                                 Movie removedMovie = movies.remove(adjustedIndex); // Remove the movie from the list
                                 System.out.println("Deleted movie: " + removedMovie.getTitle());
