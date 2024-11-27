@@ -5,15 +5,17 @@ import java.util.*;
 public class Display {
 
     public static void displayMenu() throws FileNotFoundException {
-        Scanner scan = new Scanner(System.in);
 
+        Scanner scan = new Scanner(System.in);
+        TextUI ui = new TextUI();
         while (true) {
-            System.out.println("\n--- User Menu ---");
-            System.out.println("1. My List");
-            System.out.println("2. Watched Movies");
-            System.out.println("3. Show Categories");
-            System.out.println("4. Top 5 Movies");
-            System.out.println("5. Exit");
+            ui.displayMsg("\n--- User Menu ---");
+            ui.displayMsg("1. My List");
+            ui.displayMsg("2. Watched Movies");
+            ui.displayMsg("3. Show Categories");
+            ui.displayMsg("4. Top 5 Movies");
+            ui.displayMsg("5. Search Movies ");
+            ui.displayMsg("6. Exit");
 
             String choice = scan.nextLine();
 
@@ -21,55 +23,57 @@ public class Display {
                 case "1" -> displayMyListMenu();
                 case "2" -> displayWatchedMoviesMenu();
                 case "3" -> displayCategories();
-                case "4" -> System.out.println("Showing top 5 movies...");
+                case "4" -> ui.displayMsg("Showing top 5 movies...");
                 case "5" -> {
-                    System.out.println("Exiting the program. Goodbye!");
+                    ui.displayMsg("Exiting the program. Goodbye!");
                     return;
                 }
-                default -> System.out.println("Invalid option. Please enter a valid option.");
+                default -> ui.displayMsg("Invalid option. Please enter a valid option.");
             }
         }
 
     }
 
     private static void displayMyListMenu() {
+        TextUI ui = new TextUI();
         Scanner scan = new Scanner(System.in);
         while (true) {
-            System.out.println("\n--- My List Menu ---");
-            System.out.println("1. View Saved Movies");
-            System.out.println("2. Remove a Movie");
-            System.out.println("3. Back to Main Menu");
+            ui.displayMsg("\n--- My List Menu ---");
+            ui.displayMsg("1. View Saved Movies");
+            ui.displayMsg("2. Remove a Movie");
+            ui.displayMsg("3. Back to Main Menu");
 
             String choice = scan.nextLine();
             switch (choice) {
-                case "1" -> System.out.println("Feature to view saved movies coming soon!");
-                case "2" -> System.out.println("Feature to Remove a movie coming soon!");
+                case "1" -> ui.displayMsg("Feature to view saved movies coming soon!");
+                case "2" -> ui.displayMsg("Feature to Remove a movie coming soon!");
                 case "3" -> {
-                    System.out.println("Returning to Main Menu");
+                    ui.displayMsg("Returning to Main Menu");
                     return;
                 }
-                default -> System.out.println("Invalid option. Please enter a valid option.");
+                default -> ui.displayMsg("Invalid option. Please enter a valid option.");
             }
         }
     }
 
     private static void displayWatchedMoviesMenu() {
+        TextUI ui = new TextUI();
         Scanner scan = new Scanner(System.in);
         while (true) {
-            System.out.println("\n--- Watched Movie Menu ---");
-            System.out.println("1. Watch Movies");
-            System.out.println("2. Remove a Movie");
-            System.out.println("3. Back to Main Menu");
+            ui.displayMsg("\n--- Watched Movie Menu ---");
+            ui.displayMsg("1. Watch Movies");
+            ui.displayMsg("2. Remove a Movie");
+            ui.displayMsg("3. Back to Main Menu");
 
             String choice = scan.nextLine();
             switch (choice) {
-                case "1" -> System.out.println("Feature to watch movies");
-                case "2" -> System.out.println("Feature to Remove a movie");
+                case "1" -> ui.displayMsg("Feature to watch movies");
+                case "2" -> ui.displayMsg("Feature to Remove a movie");
                 case "3" -> {
-                    System.out.println("Returning to Main Menu");
+                    ui.displayMsg("Returning to Main Menu");
                     return;
                 }
-                default -> System.out.println("Invalid option. Please enter a valid option.");
+                default -> ui.displayMsg("Invalid option. Please enter a valid option.");
             }
         }
     }
@@ -83,11 +87,11 @@ public class Display {
 
         ui.displayMsg("Available categories:");
         for (String category : categories) {
-            System.out.println("- " + category);
+            ui.displayMsg("- " + category);
         }
 
         // Brugeren vælger en kategori
-        System.out.print("Choose a category: ");
+        ui.displayMsg("Choose a category: ");
         Scanner scan = new Scanner(System.in);
         String choice = scan.nextLine().trim();
 
@@ -95,11 +99,11 @@ public class Display {
         List<Movie> filteredMovies = Movie.getMoviesByCategory(movies, choice);
 
         if (filteredMovies.isEmpty()) {
-            System.out.println("No movies found in the \"" + choice + "\" category.");
+            ui.displayMsg("No movies found in the \"" + choice + "\" category.");
         } else {
-            System.out.println("Movies in the \"" + choice + "\" category:");
+            ui.displayMsg("Movies in the \"" + choice + "\" category:");
             for (Movie filteredMovie : filteredMovies) {
-                    System.out.println("- " + filteredMovie.getTitle() + " (" + filteredMovie.getYear() + ")");
+                ui.displayMsg("- " + filteredMovie.getTitle() + " (" + filteredMovie.getYear() + ")");
                 }
             }
         }

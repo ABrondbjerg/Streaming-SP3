@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 
         public int promptNumeric(String msg) {
-            System.out.println(msg);              // Stille brugeren et spørgsmål
+            displayMsg(msg);              // Stille brugeren et spørgsmål
             String input = scan.nextLine();
             int number;
             // Give brugere et sted at placere sit svar og vente på svaret
@@ -25,7 +25,7 @@ import java.util.Scanner;
         }
 
         public String promptText(String msg){
-            System.out.println(msg);//Stille brugeren et spørgsmål
+            displayMsg(msg);//Stille brugeren et spørgsmål
             String input = scan.nextLine();
             return input;
         }
@@ -41,14 +41,14 @@ import java.util.Scanner;
         }
 
         public void displayList(ArrayList<String> options, String msg){
-            System.out.println("*******");
-            System.out.println(msg);
-            System.out.println("*******");
+            displayMsg("*******");
+            displayMsg(msg);
+            displayMsg("*******");
 
             int i = 1;
 
             for (String option : options) {
-                System.out.println(i+": "+option);
+                displayMsg(i+": "+option);
                 i++;
             }
         }

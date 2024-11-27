@@ -9,6 +9,7 @@ import java.util.Scanner;
 public class FileIO {
 
     public static ArrayList<String> readUserData(String path) {
+        TextUI ui = new TextUI();
         ArrayList<String> data = new ArrayList();
         File file = new File(path);
         try {
@@ -18,21 +19,22 @@ public class FileIO {
                 data.add(line);
             }
         } catch (FileNotFoundException e) {
-            System.out.println("File was not found");
+            ui.displayMsg("File was not found");
         }
         return data;
     }
 
     public static void saveMovieToFile(Movie movie, String filePath) {
+        TextUI ui = new TextUI();
         try (FileWriter writer = new FileWriter(filePath, true)) { // Append mode
             String movieData = movie.getTitle() + ";" +
                     movie.getYear() + ";" +
                     movie.getCategories() + ";" +
                     movie.getRating() + ";\n";
             writer.write(movieData);
-            System.out.println("Movie saved successfully!");
+            ui.displayMsg("Movie saved successfully!");
         } catch (IOException e) {
-            System.out.println("An error occurred while saving the movie: " + e.getMessage());
+            ui.displayMsg("An error occurred while saving the movie: " + e.getMessage());
         }
     }
 
@@ -41,6 +43,7 @@ public class FileIO {
         File file = new File(filePath);
 
         try (Scanner scanner = new Scanner(file)) {
+            TextUI ui = new TextUI();
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine().trim();
 
@@ -53,6 +56,7 @@ public class FileIO {
                 String[] parts = line.split(";"); // Split by semicolons
 
                 if (parts.length == 4) {
+
                     try {
                         String title = parts[0].trim();
                         int year = Integer.parseInt(parts[1].trim());
@@ -62,14 +66,15 @@ public class FileIO {
                         // Create a Movie object and add it to the list
                         //movies.add(new Movie(title, year, category, rating));
                     } catch (NumberFormatException e) {
-                        System.out.println("Invalid number format in line: " + line);
+                        ui.displayMsg("Invalid number format in line: " + line);
                     }
                 } else {
-                    System.out.println("Invalid format (unexpected number of fields) in line: " + line);
+                    ui.displayMsg("Invalid format (unexpected number of fields) in line: " + line);
                 }
             }
         } catch (FileNotFoundException e) {
-            System.out.println("File not found: " + filePath);
+            TextUI ui = new TextUI();
+            ui.displayMsg("File not found: " + filePath);
         }
 
         return movies;

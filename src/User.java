@@ -35,6 +35,8 @@ public class User {
             throw new IllegalArgumentException("Username must be at least 6 characters and under 16 characters");
         }
 
+
+
         this.username = username;
 
     }
@@ -87,30 +89,32 @@ public class User {
 
     //Method that allows users to save movies of their liking.
     public boolean saveMovie(Movie movie) {
+        TextUI ui = new TextUI();
         if (movie == null) {
             throw new IllegalArgumentException("Movie cannot be null");
         }
         //Adding the movie to the movieList
         movieList.add(movie);
-        System.out.println("Movie added successfully: " + movie);
+        ui.displayMsg("Movie added successfully: " + movie);
         return true;
     }
 
 
 
     public boolean deleteMovie(Movie movie){
+        TextUI ui = new TextUI();
         if (movie == null) {
             //Movie cannot be null, so we communicate this to  the user
             throw new IllegalArgumentException("Movie cannot be null");
         }
         if(movieList.isEmpty()){
             //If they do not have any movies saved, we say we cant find any to delete.
-            System.out.println("There are no movies in your saved list to delete");
+            ui.displayMsg("There are no movies in your saved list to delete");
             return false;
         }
         if (movieList.remove(movie)){
             //If the movie is succesfully deleted, we give the user a message saying what movie was deleted.
-            System.out.println("Movie deleted: " + movie);
+            ui.displayMsg("Movie deleted: " + movie);
             return true;
         }else{
             System.out.println("Movie not found in your saved list " + movie);
@@ -120,10 +124,11 @@ public class User {
 
     //I DON'T KNOW IF THIS IS SUPPOSED TO BE HERE (BUT IM DOING IT ANYWAY!)
       public void displaySavedMovies(){
+        TextUI ui = new TextUI();
         if (movieList.isEmpty()) {
-            System.out.println("No saved movies");
+           ui.displayMsg("No saved movies");
         }else{
-            System.out.println("Saved Movies");
+            ui.displayMsg("Saved Movies");
             //Looping through the Movie objects in the movieList
             //Movies =
             for (Movie movie : movieList){
