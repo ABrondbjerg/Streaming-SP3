@@ -6,6 +6,7 @@ public class Main {
         //Streaming.startStream();
         //Streaming.loginOrAccount("Login or register account:");
         Display.displayMenu();
+        //Streaming.searchTitle();
         //System.out.println("Pingpot!");
 
 

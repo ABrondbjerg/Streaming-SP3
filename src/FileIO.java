@@ -23,18 +23,26 @@ public class FileIO {
         return data;
     }
 
-    public static void saveMovieToFile(Movie movie, String filePath) {
+    public void saveMovieToFile(Movie movie) {
+
+        String filePath = "UserData" + File.separator + "movies.txt";
+
         try (FileWriter writer = new FileWriter(filePath, true)) { // Append mode
-            String movieData = movie.getTitle() + ";" +
-                    movie.getYear() + ";" +
-                    movie.getCategories() + ";" +
-                    movie.getRating() + ";\n";
+            // Ensure categories is not null and join them with ". "
+            String categoriesString = movie.getCategories() != null ? String.join(". ", movie.getCategories()) : "";
+
+            // Prepare the movie data to be written to the file with proper formatting
+            String movieData = String.format("Title: %s, Year: %s, Categories: %s, Rating: %.2f\n",
+                    movie.getTitle(), movie.getYear(), categoriesString, movie.getRating());
+
+            // Write the movie data to the file
             writer.write(movieData);
             System.out.println("Movie saved successfully!");
         } catch (IOException e) {
             System.out.println("An error occurred while saving the movie: " + e.getMessage());
         }
     }
+
 
     public static ArrayList<Movie> readMovieData(String filePath) {
         ArrayList<Movie> movies = new ArrayList<>();
