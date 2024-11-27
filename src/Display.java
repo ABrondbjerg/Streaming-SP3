@@ -81,7 +81,7 @@ public class Display {
         // Find unikke kategorier
         List<String> categories = Movie.getAllUniqueCategories(movies);
 
-        System.out.println("Available categories:");
+        ui.displayMsg("Available categories:");
         for (String category : categories) {
             System.out.println("- " + category);
         }
@@ -99,11 +99,12 @@ public class Display {
         } else {
             System.out.println("Movies in the \"" + choice + "\" category:");
             for (Movie filteredMovie : filteredMovies) {
-                System.out.println("- " + filteredMovie.getTitle() + " (" + filteredMovie.getYear() + ")");
+                    System.out.println("- " + filteredMovie.getTitle() + " (" + filteredMovie.getYear() + ")");
+                }
             }
         }
     }
-}
+
 
 /*
         switch (choice) {

@@ -39,9 +39,12 @@ public class Movie {
         }
         public static List<Movie> getMoviesByCategory(List<Movie> movies, String category) {
             List<Movie> filteredMovies = new ArrayList<>();
+
             for (Movie movie : movies) {
-                if (movie.getCategories().contains(category)) {
-                    filteredMovies.add(movie);
+                for (String movieCategory : movie.getCategories()) {
+                    if (movieCategory.equalsIgnoreCase(category.trim())) { // Case-insensitive sammenligning
+                        filteredMovies.add(movie);
+                    }
                 }
             }
             return filteredMovies;
