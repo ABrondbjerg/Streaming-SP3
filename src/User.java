@@ -38,22 +38,6 @@ public class User {
         this.username = username;
 
     }
-/*
-    public void createUserFile() throws IOException {
-        String fileName = username + ".txt";
-        File userFile = new File(fileName);
-        Writer writer = new FileWriter(userFile);
-
-        if (!userFile.exists() && username == null || username.trim().isEmpty()) {
-            writer.write("Username: " + getUsername());
-            writer.write("\n");
-            writer.write("Password: " + setPassword());;
-            writer.close();
-        } else {
-            System.out.println("This user already exists: " + username);
-        }
-    }
-    */
 
 
     public String getPassword() {

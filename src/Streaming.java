@@ -77,6 +77,7 @@ public class Streaming {
             User newUser = new User(username, password);
             // Gem brugerdata i en fil
             saveUserToFile(newUser);
+            userFileWatched(newUser);
             addToUserList(newUser); //Tilføjer til fællesliste
             System.out.println("Registration successful! You can now log in.");
         } catch (IllegalArgumentException e) {
@@ -109,6 +110,29 @@ public class Streaming {
                 System.out.println("An error occurred while saving the user file.");
             }
         }
+
+    private static void userFileWatched(User user) {
+
+        String directoryPath = "UserData";
+        File directory = new File(directoryPath);
+
+        String fileName = directory + File.separator + user.getUsername() + "_watched.txt";
+        File userFile = new File(fileName);
+
+        if (userFile.exists()) {
+            System.out.println("User already exists. Please choose a different username.");
+            return;
+        }
+
+        try (Writer writer = new FileWriter(userFile)) {
+            writer.write("Username: " + user.getUsername() + "\n");
+            writer.write("Saved Movies: ");
+            System.out.println("User file created: " + userFile.getAbsolutePath());
+
+        } catch (IOException e) {
+            System.out.println("An error occurred while saving the user file.");
+        }
+    }
 
     public static void addToUserList(User user) throws IOException {
         File userListFile = new File("UserData" + File.separator + "users.txt");
@@ -168,6 +192,10 @@ public class Streaming {
                 System.out.println("Invalid movie number.");
             }
         }
+    }
+
+    public void playMovie(){
+
     }
 }
 
