@@ -117,17 +117,17 @@ public class Streaming {
         File directory = new File(directoryPath);
 
         String fileName = directory + File.separator + user.getUsername() + "_watched.txt";
-        File userFile = new File(fileName);
+        File userWatchedFile = new File(fileName);
 
-        if (userFile.exists()) {
+        if (userWatchedFile.exists()) {
             System.out.println("User already exists. Please choose a different username.");
             return;
         }
 
-        try (Writer writer = new FileWriter(userFile)) {
+        try (Writer writer = new FileWriter(userWatchedFile)) {
             writer.write("Username: " + user.getUsername() + "\n");
-            writer.write("Saved Movies: ");
-            System.out.println("User file created: " + userFile.getAbsolutePath());
+            writer.write("Watched Movies: ");
+           // System.out.println("User file created: " + userWatchedFile.getAbsolutePath());
 
         } catch (IOException e) {
             System.out.println("An error occurred while saving the user file.");
