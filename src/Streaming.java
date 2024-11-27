@@ -44,7 +44,7 @@ public class Streaming {
         System.out.print("Enter password: ");
         String password = scan.nextLine();
 
-        File userFile = new File("UserData" +File.separator + username + ".txt");
+        File userFile = new File("UserData" + File.separator + username + ".txt");
         if (userFile.exists()) {
             try (Scanner fileScanner = new Scanner(userFile)) {
                 String storedUsername = fileScanner.nextLine().replace("Username: ", "").trim();
