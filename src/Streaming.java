@@ -153,146 +153,116 @@ public class Streaming {
 
 
     public static void displaySaved() {
-
         // Read movie data from the file
         ArrayList<Movie> movies = FileIO.readMovieData("ressource/movie_list.txt");
 
-        // Check if the data was read successfully
-        if (movies != null && !movies.isEmpty()) {
-            Scanner scanner = new Scanner(System.in);
-            String response = scanner.nextLine();
-            boolean whatToDo = true;
+        if (movies == null || movies.isEmpty()) {
+            System.out.println("No movies found or error reading file.");
+            return;
+        }
 
-            while (whatToDo) {
-                // display de gemte film
-                System.out.println("Movies you have added to myList:");
-                for (int i = 0; i < movies.size(); i++) {
-                    Movie movie = movies.get(i);
-                    System.out.println((i + 1) + ". " + movie);
-                }
-                System.out.println("What would you like to do?");
-                System.out.println("1. Delete a movie");
-                System.out.println("2. Play a movie");
-                System.out.println("3. Exit");
-                System.out.print("Enter your choice (1-3): ");
-                int choice = scanner.nextInt();
-                scanner.nextLine();
-                switch (choice) {
-                    case 1: //deleting movies
-                        System.out.println("Would you like to delete a movie from my List? (YES/NO)");
-                        scanner.nextLine();
+        Scanner scanner = new Scanner(System.in);
+        boolean continueLoop = true;
 
-                        if (movies != null && !movies.isEmpty()) {
-                            boolean deleteMovie = true; // Control variable for the loop
-                             scanner = new Scanner(System.in);
-                            System.out.println("Movies you have added to myList:");
-                            while (deleteMovie) {
-                                // Display the saved movies
+        while (continueLoop) {
+            displayMovies(movies);
+            System.out.println("What would you like to do?");
+            System.out.println("1. Delete a movie");
+            System.out.println("2. Play a movie");
+            System.out.println("3. Exit");
+            System.out.print("Enter your choice (1-3): ");
 
-                                for (int i = 0; i < movies.size(); i++) {
-                                    Movie movie = movies.get(i);
-                                    System.out.println((i + 1) + ". " + movie); // Call toString() of Movie
-                                }
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
 
+            switch (choice) {
+                case 1:
+                    MovieDeletion("ressource/movie_list.txt", scanner);
+                    break;
+                case 2:
+                    MoviePlay(movies, scanner);
 
-                                 response = scanner.nextLine();
-
-                                if (response.equalsIgnoreCase("YES")) {
-                                    System.out.print("Enter the number of the movie to delete: ");
-                                    int movieIndex = scanner.nextInt();
-                                    scanner.nextLine(); // scanner svaret
-
-                                    int adjustedIndex = movieIndex - 1; // Adjust for 1-based input
-
-                                    if (adjustedIndex >= 0 && adjustedIndex < movies.size()) {
-                                        Movie removedMovie = movies.remove(adjustedIndex); // Remove the movie from the list
-                                        System.out.println("Deleted movie: " + removedMovie.getTitle());
-
-                                        // Updater filen
-                                        try (FileWriter writer = new FileWriter("ressource/movie_list.txt", false)) { // Overwrite file
-                                            for (Movie movie : movies) {
-                                                writer.write(movie.getTitle() + "; " + movie.getYear() + "; " +
-                                                        String.join(", ", movie.getCategories()) + "; " + movie.getRating() + ";\n");
-                                            }
-                                            System.out.println("Movie list updated successfully.");
-                                            System.out.println("Would you like to delete another movie from my List? (YES/NO)");
-                                        } catch (IOException e) {
-                                            System.out.println("Error updating file: " + e.getMessage());
-                                        }
-                                    } else {
-                                        System.out.println("Invalid movie number. Please try again.");
-                                    }
-                                } else if (response.equalsIgnoreCase("NO")) {
-                                    deleteMovie = false; // forlad  loop
-                                    System.out.println("Exiting...");
-                                } else {
-                                    System.out.println("Invalid input. Please respond with YES or NO.");
-                                }
-                            }
-                        } else {
-                            System.out.println("No movies found or error reading file.");
-                        }
-                        break;
-
-                        case 2: // spiller filmen
-
-                            System.out.print("Enter the movie number to watch a movie: ");
-                            int movieIndex = scanner.nextInt(); // Get the movie index from the user
-
-                            // Adjust index since the list is 0-based but the user is selecting 1-based
-                            int adjustedIndex = movieIndex - 1; // User selects starting from 1
-
-                            // Read movie data from the file and read watched
-                            ArrayList<Movie> watchedList = new ArrayList<>();
-                            if (adjustedIndex >= 0 && adjustedIndex < movies.size()) {
-                                Movie selectedMovie = movies.get(adjustedIndex);
-                                watchedList.add(selectedMovie);  // Add to the selected list (myList)
-                                System.out.println("You have watched:" + selectedMovie.getTitle());
-                                System.out.println("Added movie: " + selectedMovie.getTitle());
-
-                                // Save the selected movie to the user's file immediately after adding it
-                                String userFilePath = "ressource/watched";
-
-                                try (FileWriter writer = new FileWriter(userFilePath, true)) {  // 'true' to append to the file
-                                    writer.write(selectedMovie.getTitle() + "; " + selectedMovie.getYear() + "; " + selectedMovie.getCategories() + "; " + selectedMovie.getRating() + ";\n");
-                                    System.out.println("Movie saved to " + userFilePath);
-                                } catch (IOException e) {
-                                    System.out.println("Error saving movie to file: " + e.getMessage());
-                                }
-                            } else {
-                                System.out.println("Invalid movie index. Please try again.");
-                            }
-                            //Sletter filmen fra my List
-                            if (adjustedIndex >= 0 && adjustedIndex < movies.size()) {
-                                Movie removedMovie = movies.remove(adjustedIndex); // Remove the movie from the list
-                                System.out.println("Deleted movie: " + removedMovie.getTitle());
-
-                                // Updater filen
-                                try (FileWriter writer = new FileWriter("ressource/movie_list.txt", false)) { // Overwrite file
-                                    for (Movie movie : movies) {
-                                        writer.write(movie.getTitle() + "; " + movie.getYear() + "; " +
-                                                String.join(", ", movie.getCategories()) + "; " + movie.getRating() + ";\n");
-                                    }
-                                    System.out.println("Movie list updated successfully.");
-                                    System.out.println("Would you like to delete another movie from my List? (YES/NO)");
-                                } catch (IOException e) {
-                                    System.out.println("Error updating file: " + e.getMessage());
-                                }
-                            } else {
-                                System.out.println("Invalid movie number. Please try again.");
-                            }
-                            break;
-                        case 3: //forlad
-                        whatToDo = false;
-                        System.out.println("Exit program.");
-                        break;
-                        }
-
-
-
+                    break;
+                case 3:
+                    continueLoop = false;
+                    System.out.println("Exit program.");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
             }
         }
     }
+
+    private static void displayMovies(ArrayList<Movie> movies) {
+        System.out.println("Movies you have added to myList:" + "\n");
+        for (int i = 0; i < movies.size(); i++) {
+            System.out.println((i + 1) + ". " + movies.get(i));
+        }
+    }
+
+    public static void MovieDeletion(String filePath, Scanner scanner) {
+        while (true) {
+            ArrayList<Movie> movies = FileIO.readMovieData(filePath);
+
+            if (movies == null || movies.isEmpty()) {
+                System.out.println("No movies found in the list.");
+                return;
+            }
+
+            System.out.println("Movies you have added to myList:");
+            for (int i = 0; i < movies.size(); i++) {
+                System.out.println((i + 1) + ". " + movies.get(i));
+            }
+
+            System.out.println("Enter the number of the movie to delete, or type 'exit' to return:");
+            String input = scanner.nextLine();
+
+            if (input.equalsIgnoreCase("exit")) {
+                break;
+            }
+
+            try {
+                int movieIndex = Integer.parseInt(input) - 1;
+                io.deleteMovie(filePath, movieIndex);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a valid number or 'exit'.");
+            }
+        }
+    }
+
+    private static void MoviePlay(ArrayList<Movie> movies, Scanner scanner) {
+        displayMovies(movies);
+        System.out.print("Enter the movie number to watch: ");
+        int movieIndex = scanner.nextInt() - 1;
+        scanner.nextLine(); // Consume newline
+
+        if (movieIndex >= 0 && movieIndex < movies.size()) {
+            Movie selectedMovie = movies.get(movieIndex);
+            System.out.println("You are watching: " + selectedMovie.getTitle());
+            System.out.println("You have watched: " + selectedMovie.getTitle());
+
+            saveMovieToFile(selectedMovie, "ressource/watched");
+           io.deleteMovie("ressource/movie_list.txt", movieIndex);
+           io.updateMovieList("ressource/movie_list.txt");
+            System.out.print("the movie has been added to watched List and deleted from myList ");
+
+        } else {
+            System.out.println("Invalid movie number. Please try again.");
+        }
+    }
+
+
+
+    private static void saveMovieToFile(Movie movie, String filePath) {
+        try (FileWriter writer = new FileWriter(filePath, true)) {
+            writer.write(movie.getTitle() + "; " + movie.getYear() + "; " +
+                    String.join(", ", movie.getCategories()) + "; " + movie.getRating() + ";\n");
+            System.out.println("Movie saved to " + filePath);
+        } catch (IOException e) {
+            System.out.println("Error saving movie: " + e.getMessage());
+        }
+    }
+
 
                     public void displayWatched () {
 

@@ -13,6 +13,7 @@ public class FileIO {
         File file = new File(path);
         try {
             Scanner scan = new Scanner(file);
+
             while (scan.hasNextLine()) {
                 String line = scan.nextLine();
                 data.add(line);
@@ -33,6 +34,51 @@ public class FileIO {
             System.out.println("Movie saved successfully!");
         } catch (IOException e) {
             System.out.println("An error occurred while saving the movie: " + e.getMessage());
+        }
+    }
+    public static void deleteMovie(String filePath, int movieIndex) {
+
+        try {
+            // Read the current movie list
+            ArrayList<Movie> movies = readMovieData(filePath);
+
+            if (movies == null || movies.isEmpty()) {
+                System.out.println("No movies found in the file.");
+                return;
+            }
+
+            if (movieIndex < 0 || movieIndex >= movies.size()) {
+                System.out.println("Invalid movie index.");
+                return;
+            }
+
+            // Remove the movie
+            Movie removedMovie = movies.remove(movieIndex);
+            System.out.println("Deleted movie: " + removedMovie.getTitle());
+
+            // Write updated movie list back to the file
+            try (FileWriter writer = new FileWriter(filePath, false)) { // Overwrite file
+                for (Movie movie : movies) {
+                    writer.write(movie.getTitle() + "; " + movie.getYear() + "; " +
+                            String.join(", ", movie.getCategories()) + "; " + movie.getRating() + ";\n");
+                }
+                updateMovieList(filePath);
+            }
+        } catch (IOException e) {
+            System.out.println("Error while updating the file: " + e.getMessage());
+        }
+
+    }
+    public static void updateMovieList(String filePath) {
+        ArrayList<Movie> movies = readMovieData(filePath);
+        try (FileWriter writer = new FileWriter(filePath, false)) { // Overwrite file
+            for (Movie movie : movies) {
+                writer.write(movie.getTitle() + "; " + movie.getYear() + "; " +
+                        String.join(", ", movie.getCategories()) + "; " + movie.getRating() + ";\n");
+            }
+            System.out.println("Movie list updated successfully.");
+        } catch (IOException e) {
+            System.out.println("Error updating file: " + e.getMessage());
         }
     }
 
@@ -56,11 +102,11 @@ public class FileIO {
                     try {
                         String title = parts[0].trim();
                         int year = Integer.parseInt(parts[1].trim());
-                        String category = parts[2].trim();
+                        String categories = parts[2].trim();
                         float rating = Float.parseFloat(parts[3].trim());
 
                         // Create a Movie object and add it to the list
-                        //movies.add(new Movie(title, year, category, rating));
+                        movies.add(new Movie(title, year, categories, rating));
                     } catch (NumberFormatException e) {
                         System.out.println("Invalid number format in line: " + line);
                     }
