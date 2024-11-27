@@ -13,7 +13,8 @@ public class Display {
             System.out.println("2. Watched Movies");
             System.out.println("3. Show Categories");
             System.out.println("4. Top 5 Movies");
-            System.out.println("5. Exit");
+            System.out.println("5. Search Movies");
+            System.out.println("6. Exit");
 
             String choice = scan.nextLine();
 
@@ -22,7 +23,8 @@ public class Display {
                 case "2" -> displayWatchedMoviesMenu();
                 case "3" -> displayCategories();
                 case "4" -> displayTop5Movies();
-                case "5" -> {
+                case "5" -> Streaming.searchTitle();
+                case "6" -> {
                     System.out.println("Exiting the program. Goodbye!");
                     return;
                 }
