@@ -1,7 +1,9 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.*;
 
-    public class Movie {
+
+public class Movie {
         private String title;
         private String year;
         private List<String> categories;
@@ -28,35 +30,58 @@ import java.util.List;
             return categories;
         }
 
+        public static List<String> getAllUniqueCategories(List<Movie> movies) {
+            Set<String> uniqueCategories = new HashSet<>();
+            for (Movie movie : movies) {
+                uniqueCategories.addAll(movie.getCategories());
+            }
+            return new ArrayList<>(uniqueCategories);
+        }
+        public static List<Movie> getMoviesByCategory(List<Movie> movies, String category) {
+            List<Movie> filteredMovies = new ArrayList<>();
+            for (Movie movie : movies) {
+                if (movie.getCategories().contains(category)) {
+                    filteredMovies.add(movie);
+                }
+            }
+            return filteredMovies;
+        }
+
+
         public double getRating() {
             return rating;
         }
 
         // Metode til at oprette film fra data
 
-        public static List<Movie> createMovies(String[] moviedata) {
-            List<Movie> movies = new ArrayList<>();
+    public static List<Movie> createMovies(String fileName) throws FileNotFoundException {
+        List<Movie> movies = new ArrayList<>();
 
-            for (String movieData : moviedata) {
+        // Scanner til at læse filen
+        Scanner scanner = new Scanner(new File(fileName));
 
-                String[] data = movieData.split(";");
-                String title = data[0].trim();
-                String year = data[1].trim();
-                String[] categoryArray = data[2].trim().split(",");
-                double rating = Double.parseDouble(data[3].trim());
+        // Læs hver linje i filen og opret film
+        while (scanner.hasNextLine()) {
+            String movieData = scanner.nextLine();
+            String[] data = movieData.split(";");
+            String title = data[0].trim();
+            String year = data[1].trim();
+            String[] categoryArray = data[2].trim().split(",");
+            double rating = Double.parseDouble(data[3].trim().replace(",", "."));
 
-                // Opret en liste af kategorier
-                List<String> categories = new ArrayList<>();
-                for (String category : categoryArray) {
-                    categories.add(category.trim());
-                }
-
-                // Opret og tilføj film til listen
-                Movie movie = new Movie(title, year, categories, rating);
-                movies.add(movie);
+            // Opret liste af kategorier
+            List<String> categories = new ArrayList<>();
+            for (String category : categoryArray) {
+                categories.add(category.trim());
             }
 
-            return movies; // Returner listen af film
+            // Opret film objekt
+            Movie movie = new Movie(title, year, categories, rating);
+            movies.add(movie);
         }
+
+        return movies;
     }
+
+}
 

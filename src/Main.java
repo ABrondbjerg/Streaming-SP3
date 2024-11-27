@@ -1,9 +1,12 @@
-public class Main {
-    public static void main(String[] args) {
+import java.io.FileNotFoundException;
 
-        Streaming.startStream();
-        Streaming.loginOrAccount("Login or register account:");
-        System.out.println("Pingpot!");
+public class Main {
+    public static void main(String[] args) throws FileNotFoundException {
+
+        //Streaming.startStream();
+        //Streaming.loginOrAccount("Login or register account:");
+        Display.displayMenu();
+        //System.out.println("Pingpot!");
 
 
 
