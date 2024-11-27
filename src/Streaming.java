@@ -102,7 +102,9 @@ public class Streaming {
 
             try (Writer writer = new FileWriter(userFile)) {
                 writer.write("Username: " + user.getUsername() + "\n");
-               writer.write("Password: " + user.getPassword() + "\n");
+               writer.write("Saved Movies: ");
+               System.out.println("User file created: " + userFile.getAbsolutePath());
+
             } catch (IOException e) {
                 System.out.println("An error occurred while saving the user file.");
             }
@@ -129,9 +131,10 @@ public class Streaming {
 
     public static void searchTitle() {
 
+
         boolean found = false; // Initially, assume no movie is found
         Scanner scanner = new Scanner(System.in);
-        ArrayList<Movie> movies = FileIO.readMovieData(movieDataPath);
+        ArrayList<Movie> movies = io.readMovieData(movieDataPath);
 
         // Ask the user for the title keyword
         System.out.print("Enter the title of the movie: ");
@@ -150,14 +153,17 @@ public class Streaming {
         if (!found) {
             System.out.println("No movies found with the title containing: " + keyword);
         } else {
+            // Ask the user to choose a movie
             System.out.print("Enter the number of the movie you want to save: ");
             int movieNumber = scanner.nextInt();
 
+            // Ensure the number is valid and corresponds to a movie
             if (movieNumber > 0 && movieNumber <= movies.size()) {
-                Movie selectedMovie = movies.get(movieNumber - 1);
+                Movie selectedMovie = movies.get(movieNumber - 1);  // Select the movie
 
-                // Call saveMovie with the selected movie
-                io.saveMovieToFile(selectedMovie);
+                // Call saveMovieToFile with the selected movie
+                io.saveMovieToFile(selectedMovie);  // Save the selected movie to file
+                System.out.println("Movie saved: " + selectedMovie.getTitle());
             } else {
                 System.out.println("Invalid movie number.");
             }

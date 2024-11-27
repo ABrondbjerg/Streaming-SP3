@@ -85,6 +85,10 @@ public class Movie {
 
         return movies;
     }
-
+    public String toString() {
+        // Assuming 'title' and 'year' are Strings, and 'rating' is a double
+        return String.format("Title: %s, Year: %s, Categories: %s, Rating: %.2f",
+                title, year, String.join(", ", categories), rating);
+    }
 }
 

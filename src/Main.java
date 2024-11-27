@@ -3,8 +3,8 @@ import java.io.FileNotFoundException;
 public class Main {
     public static void main(String[] args) throws FileNotFoundException {
 
-        //Streaming.startStream();
-        //Streaming.loginOrAccount("Login or register account:");
+        Streaming.startStream();
+        Streaming.loginOrAccount("Login or register account:");
         Display.displayMenu();
         //Streaming.searchTitle();
         //System.out.println("Pingpot!");

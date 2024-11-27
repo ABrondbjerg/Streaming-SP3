@@ -51,24 +51,20 @@ public class FileIO {
         try (Scanner scanner = new Scanner(file)) {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine().trim();
-
-                // Remove trailing semicolon and replace commas in ratings with periods
                 if (line.endsWith(";")) {
                     line = line.substring(0, line.length() - 1);
                 }
                 line = line.replace(',', '.');
-
-                String[] parts = line.split(";"); // Split by semicolons
-
+                String[] parts = line.split(";");
                 if (parts.length == 4) {
                     try {
                         String title = parts[0].trim();
-                        int year = Integer.parseInt(parts[1].trim());
-                        String category = parts[2].trim();
-                        float rating = Float.parseFloat(parts[3].trim());
+                        String year = parts[1].trim();
+                        List<String> categories = List.of(parts[2].trim().split(","));
+                        double rating = Float.parseFloat(parts[3].trim());
+                        Movie movie = new Movie(title, year, categories, rating);
+                        movies.add(movie);
 
-                        // Create a Movie object and add it to the list
-                        //movies.add(new Movie(title, year, category, rating));
                     } catch (NumberFormatException e) {
                         System.out.println("Invalid number format in line: " + line);
                     }
@@ -79,8 +75,6 @@ public class FileIO {
         } catch (FileNotFoundException e) {
             System.out.println("File not found: " + filePath);
         }
-
         return movies;
     }
-
 }
