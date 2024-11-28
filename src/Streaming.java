@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -12,7 +13,7 @@ public class Streaming {
         TextUI textUI = new TextUI();
         textUI.displayMsg("Welcome to MouseGun Streams");
     }
-// Lav user/bruger
+
 
     public static void loginOrAccount(String msg) {
         Scanner scan = new Scanner(System.in);
@@ -176,6 +177,7 @@ public class Streaming {
             scanner.nextLine(); // Consume newline
 
             switch (choice) {
+
                 case 1:
                     MovieDeletion("ressource/movie_list.txt", scanner);
                     break;
@@ -201,8 +203,13 @@ public class Streaming {
     }
 
     public static void MovieDeletion(String filePath, Scanner scanner) {
+        String userFilePath = "UserMyList" + File.separator + currentUser + "_myList.txt";
+
+
         while (true) {
-            ArrayList<Movie> movies = FileIO.readMovieData(filePath);
+
+
+            ArrayList<Movie> movies = io.readMovieData(filePath);
 
             if (movies == null || movies.isEmpty()) {
                 System.out.println("No movies found in the list.");
@@ -223,7 +230,8 @@ public class Streaming {
 
             try {
                 int movieIndex = Integer.parseInt(input) - 1;
-                io.deleteMovie(filePath, movieIndex);
+                io.deleteMovie("ressource/movie_list.txt", movieIndex);
+
             } catch (NumberFormatException e) {
                 System.out.println("Invalid input. Please enter a valid number or 'exit'.");
             }
@@ -243,7 +251,6 @@ public class Streaming {
 
             saveMovieToFile(selectedMovie, "ressource/watched");
            io.deleteMovie("ressource/movie_list.txt", movieIndex);
-           io.updateMovieList("ressource/movie_list.txt");
             System.out.print("the movie has been added to watched List and deleted from myList ");
 
         } else {
