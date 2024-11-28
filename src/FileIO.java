@@ -28,7 +28,6 @@ public class FileIO {
             // Iterate through the movie list and write each movie with the correct index
 
                 // Write movie with semicolons between fields, as expected in the file
-                System.out.println("Mac er altså godt");
                 writer.write(movie.getTitle() + "; "
                         + movie.getYear() + "; "
                         + movie.getCategories() + "; "
