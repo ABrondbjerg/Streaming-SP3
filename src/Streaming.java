@@ -173,13 +173,13 @@ public class Streaming {
     public static FileIO io = new FileIO();
 
 
-    public static void searchTitle() {
+    public static void searchTitle() throws IOException {
 
         boolean found = true;
         boolean running = true;
 
         Scanner scanner = new Scanner(System.in);
-        ArrayList<Movie> movies = io.readMovieData(movieDataPath);
+        ArrayList<Movie> movies = FileIO.readMovieData(movieDataPath);
 
         System.out.print("Enter the title of the movie: ");
         String keyword = scanner.nextLine();
@@ -244,14 +244,16 @@ public class Streaming {
         }
 
         Movie selectedMovie = movies.get(adjustedIndex); // Get selected movie
-        Streaming.playMovie(String.valueOf(selectedMovie),currentUser);
-        // Add the movie to myList
+        Streaming.playMovie(String.valueOf(selectedMovie), currentUser);
+        /*// Add the movie to myList
         myList.add(selectedMovie);
         // Save the updated list to the user's file
         FileIO.saveMovieToFile(selectedMovie); // Uses dynamic file path internally
         System.out.println("Added movie: " + selectedMovie.getTitle());
     }
 
+         */
+    }
     public static void displayWatchedMovie() throws IOException {
         // Construct the file path
         String userFilePath = "UserData" + File.separator + currentUser.getUsername() + "_watched.txt";
@@ -320,9 +322,9 @@ public class Streaming {
         }
     }
 
-    public static void movieDeletion() {
+    public static void movieDeletion() throws IOException {
         String userFilePath = "UserData" + File.separator + currentUser.getUsername() + "_saved.txt";
-        Scanner scanner = new Scanner(userFilePath);
+        Scanner scanner = new Scanner(System.in);
 
         while (true) {
             
@@ -347,7 +349,7 @@ public class Streaming {
 
             try {
                 int movieIndex = Integer.parseInt(input) - 1;
-                io.deleteMovie("UserData" + File.separator + currentUser.getUsername() + "_saved.txt", movieIndex);
+                FileIO.deleteMovie("UserData" + File.separator + currentUser.getUsername() + "_saved.txt", movieIndex);
 
             } catch (NumberFormatException e) {
                 System.out.println("Invalid input. Please enter a valid number or 'exit'.");

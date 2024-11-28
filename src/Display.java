@@ -135,12 +135,12 @@ public class Display {
 
                 switch (actionChoice) {
                     case 1:
-                        streaming.playMovie(selectedMovie.getTitle(), currentUser);
+                        streaming.playMovie(String.valueOf(selectedMovie), currentUser);
                         break;
                     case 2:
                         // Gem filmen (forudsat at metoden allerede findes)
                         FileIO.saveMovieToFile(selectedMovie);
-                        System.out.println(selectedMovie.getTitle() + " has been saved!");
+                        System.out.println(selectedMovie + " has been saved!");
                         break;
                     case 3:
                         // Exit til hovedmenu

@@ -33,58 +33,41 @@ public class FileIO {
                         + movie.getCategories() + "; "
                         + String.format("%.1f", movie.getRating()).replace('.', ',') + ";\n");  // Format rating and replace dot with comma
 
-            System.out.println("Movies saved to " + userFilePath);
         } catch (IOException e) {
             System.out.println("Error saving movies to file: " + e.getMessage());
         }
     }
+        public static ArrayList<Movie> readMovieData(String filePath) throws IOException {
+            ArrayList<Movie> movies = new ArrayList<>();
+            File file = new File(filePath);
+            try (Scanner scanner = new Scanner(file)) {
+                while (scanner.hasNextLine()) {
+                    String line = scanner.nextLine();
+                    String[] fields = line.split(";");
+                    String[] fields2 = line.split(",");
 
+                    // Validate the number of fields
+                    if (fields.length == 4) {
+                        // Assuming fields are title, year, genre, and rating
+                        String title = fields[0].trim(); // Titlen
+                        String year = fields[1].trim();  // År
+                        String categoryString = fields[2].trim(); // Kategorier
+                        String ratingString = fields[3].trim();  // Rating
+                        ratingString = ratingString.replace(',', '.');
+                        double rating = Double.parseDouble(ratingString);
 
+                        categoryString = categoryString.replace("[", "").replace("]", "");
+                        List<String> categories = List.of(categoryString.split(",\\s*"));
 
-    public static ArrayList<Movie> readMovieData(String filePath) {
-        ArrayList<Movie> movies = new ArrayList<>();
-        File file = new File(filePath);
-
-        try (Scanner scanner = new Scanner(file)) {
-
-            // Skip the first two lines (username and password)
-
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine().trim();
-
-                // Remove trailing semicolon if present and replace commas in ratings with periods
-                if (line.endsWith(";")) {
-                    line = line.substring(0, line.length() - 1);
-                }
-                line = line.replace(',', '.');  // Convert rating commas back to dots
-
-                String[] parts = line.split(";");
-                String[] categoryParts = line.split(",");// Split by semicolons
-
-                if (parts.length == 4) {  // There should be 4 fields (title, year, categories, rating)
-                    try {
-                        String title = parts[0].trim();
-                        String year = parts[1].trim();
-                        List <String> categories = List.of(categoryParts);
-                        float rating = Float.parseFloat(parts[3].trim());
-
-                        // Create a Movie object and add it to the list
-                        movies.add(new Movie(title, year, categories, rating));
-                    } catch (NumberFormatException e) {
-                        System.out.println("Invalid number format in line: " + line);
+                        Movie movie = new Movie(title, year, categories, rating);
+                        movies.add(movie);
+                    } else {
+                        System.out.println("Invalid format in line: " + line);
                     }
-                } else {
-                    System.out.println("Invalid format (unexpected number of fields) in line: " + line);
                 }
             }
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found: " + filePath);
+            return movies;
         }
-
-        return movies;
-    }
-
-
 
 
     static void updateUserFile(ArrayList<Movie> movies, String userFilePath) {
