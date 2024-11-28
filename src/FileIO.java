@@ -1,7 +1,4 @@
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -23,58 +20,98 @@ public class FileIO {
         return data;
     }
 
-    public void saveMovieToFile(Movie movie) {
+    public static void saveMovieToFile() {
+        // Construct the file path based on the current user's username
+        String userFilePath = "UserData" + File.separator + Streaming.getCurrentUser().getUsername() + "_saved.txt";
 
-        String filePath = "UserData" + File.separator + "movies.txt";
-
-        try (FileWriter writer = new FileWriter(filePath, true)) { // Append mode
-            // Ensure categories is not null and join them with ". "
-            String categoriesString = movie.getCategories() != null ? String.join(". ", movie.getCategories()) : "";
-
-            // Prepare the movie data to be written to the file with proper formatting
-            String movieData = String.format("Title: %s, Year: %s, Categories: %s, Rating: %.2f\n",
-                    movie.getTitle(), movie.getYear(), categoriesString, movie.getRating());
-
-            // Write the movie data to the file
-            writer.write(movieData);
-            System.out.println("Movie saved successfully!");
+        try (FileWriter writer = new FileWriter(userFilePath, true)) {
+            // Iterate through the movie list and write each movie with the correct index
+            for (Movie movie : Streaming.myList) {
+                // Write movie with semicolons between fields, as expected in the file
+                writer.write(movie.getTitle() + "; "
+                        + movie.getYear() + "; "
+                        + movie.getCategories() + "; "
+                        + String.format("%.1f", movie.getRating()).replace('.', ',') + ";\n");  // Format rating and replace dot with comma
+            }
+            System.out.println("Movies saved to " + userFilePath);
         } catch (IOException e) {
-            System.out.println("An error occurred while saving the movie: " + e.getMessage());
+            System.out.println("Error saving movies to file: " + e.getMessage());
         }
     }
+
 
 
     public static ArrayList<Movie> readMovieData(String filePath) {
         ArrayList<Movie> movies = new ArrayList<>();
         File file = new File(filePath);
 
-        try (Scanner scanner = new Scanner(file)) {
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine().trim();
-                if (line.endsWith(";")) {
-                    line = line.substring(0, line.length() - 1);
-                }
-                line = line.replace(',', '.');
-                String[] parts = line.split(";");
-                if (parts.length == 4) {
-                    try {
-                        String title = parts[0].trim();
-                        String year = parts[1].trim();
-                        List<String> categories = List.of(parts[2].trim().split(","));
-                        double rating = Float.parseFloat(parts[3].trim());
-                        Movie movie = new Movie(title, year, categories, rating);
-                        movies.add(movie);
+        // Kontrollerer om filen eksisterer
+        if (!file.exists()) {
+            System.out.println("No saved movies found at: " + filePath);
+            return movies; // Returnerer en tom liste
+        }
 
-                    } catch (NumberFormatException e) {
-                        System.out.println("Invalid number format in line: " + line);
-                    }
-                } else {
-                    System.out.println("Invalid format (unexpected number of fields) in line: " + line);
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                // Trim linjen for at fjerne unødvendige mellemrum
+                line = line.trim();
+                if (!line.isEmpty()) { // Undgå at tilføje tomme linjer
+                    movies.add(new Movie(line)); // Brug den nye konstruktør
                 }
             }
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found: " + filePath);
+        } catch (IOException e) {
+            System.out.println("Error reading movie data: " + e.getMessage());
         }
-        return movies;
+
+        return movies; // Returnerer listen over film
+    }
+
+
+
+
+    static void updateUserFile(ArrayList<Movie> movies, String userFilePath) {
+        try (FileWriter writer = new FileWriter(userFilePath, false)) {
+            for (Movie movie : movies) {
+                writer.write(movie.getTitle() + "; " + movie.getYear() + "; "
+                        + movie.getCategories() + "; " + movie.getRating() + ";\n");
+            }
+            System.out.println("User file updated successfully.");
+        } catch (IOException e) {
+            System.out.println("Error updating user file: " + e.getMessage());
+        }
+    }
+
+    public static void deleteMovie(String filePath, int movieIndex) {
+
+        try {
+            // Read the current movie list
+            ArrayList<Movie> movies = readMovieData(filePath);
+
+            if (movies == null || movies.isEmpty()) {
+                System.out.println("No movies found in the file.");
+                return;
+            }
+
+            if (movieIndex < 0 || movieIndex >= movies.size()) {
+                System.out.println("Invalid movie index.");
+                return;
+            }
+
+            // Remove the movie
+            Movie removedMovie = movies.remove(movieIndex);
+            System.out.println("Deleted movie: " + removedMovie.getTitle());
+
+            // Write updated movie list back to the file
+            try (FileWriter writer = new FileWriter(filePath, false)) { // Overwrite file
+                for (Movie movie : movies) {
+                    writer.write(movie.getTitle() + "; " + movie.getYear() + "; " +
+                            String.join(", ", movie.getCategories()) + "; " + movie.getRating() + ";\n");
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error while updating the file: " + e.getMessage());
+        }
+
     }
 }

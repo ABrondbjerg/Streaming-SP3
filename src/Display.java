@@ -45,8 +45,9 @@ public class Display {
 
             String choice = scan.nextLine();
             switch (choice) {
-                case "1" -> System.out.println("Feature to view saved movies coming soon!");
-                case "2" -> System.out.println("Feature to Remove a movie coming soon!");
+                case "1" -> Streaming.displaySavedMovie();
+                case "2" ->
+                        Streaming.movieDeletion();
                 case "3" -> {
                     System.out.println("Returning to Main Menu");
                     return;
@@ -66,8 +67,8 @@ public class Display {
 
             String choice = scan.nextLine();
             switch (choice) {
-                case "1" -> System.out.println("Feature to watch movies");
-                case "2" -> System.out.println("Feature to Remove a movie");
+                case "1" -> Streaming.displayWatchedMovie();
+                case "2" -> Streaming.movieDeletion();
                 case "3" -> {
                     System.out.println("Returning to Main Menu");
                     return;
@@ -138,7 +139,7 @@ public class Display {
                         break;
                     case 2:
                         // Gem filmen (forudsat at metoden allerede findes)
-                        io.saveMovieToFile(selectedMovie);
+                        Streaming.saveMovieToFile(selectedMovie.getTitle(), currentUser);
                         System.out.println(selectedMovie.getTitle() + " has been saved!");
                         break;
                     case 3:
@@ -153,9 +154,16 @@ public class Display {
             }
         }
     }
+
     private static void displayTop5Movies() throws IOException {
         Scanner scanner = new Scanner(System.in);
         List<Movie> movies = Movie.createMovies("ressource" + File.separator + "film.txt");
+
+        // Tjek om der er nok film i listen
+        if (movies.size() < 5) {
+            System.out.println("Not enough movies to display the top 5.");
+            return;
+        }
 
         // Udskriv top 5 film
         System.out.println("\n--- Top 5 Movies ---");
@@ -164,48 +172,56 @@ public class Display {
             System.out.println((i + 1) + ". " + movie.getTitle() + " (" + movie.getYear() + ")");
         }
 
-        System.out.println("Enter the number of the movie you want to choose:");
+        // Brugeren vælger en film
+        System.out.println("Enter the number of the movie you want to choose (1-5):");
         int movieChoice = scanner.nextInt();
 
-        // Tjek for gyldig input
-        if (movieChoice < 1 || movieChoice > movies.size()) {
+        // Tjek for gyldigt input
+        if (movieChoice < 1 || movieChoice > 5) {
             System.out.println("Invalid choice. Returning to main menu.");
             return; // Vi stopper funktionen her, hvis valget er ugyldigt.
-        } else {
-            Movie selectedMovie = movies.get(movieChoice - 1);
-            System.out.println(selectedMovie.getTitle() + " (" + selectedMovie.getYear() + ")");
         }
 
+        // Hent den valgte film
+        Movie selectedMovie = movies.get(movieChoice - 1);
+        System.out.println("You selected: " + selectedMovie.getTitle() + " (" + selectedMovie.getYear() + ")");
+
+        // Menu for handling af den valgte film
         boolean stayInMenu = true;
         while (stayInMenu) {
-            System.out.println("Choose an option:");
-            System.out.println("1: Watch movie");
-            System.out.println("2: Save movie");
-            System.out.println("3: Exit to main menu");
-
+            System.out.println("\nWhat would you like to do?");
+            System.out.println("1. Play movie");
+            System.out.println("2. Save movie to your list");
+            System.out.println("3. Return to main menu");
+            System.out.print("Enter your choice: ");
             int actionChoice = scanner.nextInt();
-
-            FileIO io = new FileIO();
-            Streaming streaming = new Streaming();
-            User currentUser = Streaming.getCurrentUser(); // Sørg for at få den korrekte bruger her.
 
             switch (actionChoice) {
                 case 1:
-                    streaming.playMovie("", currentUser);
+                    // Afspil filmen
+                    Streaming streaming = new Streaming();
+                    User currentUser = Streaming.getCurrentUser(); // Antag, at denne metode findes
+                    streaming.playMovie(selectedMovie.getTitle(), currentUser);
                     break;
+
                 case 2:
-                    io.saveMovieToFile(selectedMovie);
+                    // Gem filmen i brugerens liste
+                    Streaming streaming2 = new Streaming();
+                    User currentUser2 = Streaming.getCurrentUser();
+                    streaming2.playMovie(selectedMovie.getTitle(), currentUser2);
                     System.out.println(selectedMovie.getTitle() + " has been saved!");
                     break;
+
                 case 3:
+                    // Exit til hovedmenu
                     stayInMenu = false;
                     System.out.println("Returning to main menu.");
-                    displayMenu(); // Hovedmenuen skal vises igen.
+                    Display.displayMenu(); // Antager, at displayMenu() findes
                     break;
+
                 default:
                     System.out.println("Invalid option. Please choose again.");
             }
         }
     }
-
 }
