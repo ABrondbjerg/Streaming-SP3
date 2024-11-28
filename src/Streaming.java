@@ -6,7 +6,17 @@ import java.util.Scanner;
 import java.util.ArrayList;
 
 
+
 public class Streaming {
+    private static User currentUser;
+
+    public static User getCurrentUser() {
+        return currentUser;  // Hent den aktuelle bruger
+    }
+
+    public static void setCurrentUser(User user) {
+        currentUser = user;  // Sæt den aktuelle bruger
+    }
 
     public static void startStream() {
         TextUI textUI = new TextUI();
@@ -54,11 +64,12 @@ public class Streaming {
                 String storedPassword = fileScanner.nextLine().replace("Password: ", "").trim();
 
                 if (username.equals(storedUsername) && String.valueOf(password.hashCode()).equals(storedPassword)) {
+                    currentUser = new User(username, password);  // Set currentUser to the logged-in user
                     System.out.println("Login successful! Welcome, " + username);
-                    return true; // Login succesfuldt
+                    return true; // Login successful
                 } else {
                     System.out.println("Invalid username or password.");
-                    return false; // Login fejlede
+                    return false; // Login failed
                 }
             } catch (IOException e) {
                 System.out.println("An error occurred while reading the user file.");
@@ -66,7 +77,7 @@ public class Streaming {
         } else {
             System.out.println("No account found for username: " + username);
         }
-        return false; // Login fejlede, da filen ikke fandtes
+        return false; // Login failed, file not found
     }
 
 
@@ -193,12 +204,16 @@ public class Streaming {
         }
     }
 
-    public void playMovie(String selectedMovie, User user) throws IOException {
+    public void playMovie(String selectedMovie) throws IOException {
+        if (currentUser == null) {
+            System.out.println("No user is currently logged in.");
+            return;
+        }
         TextUI textUI = new TextUI();
         textUI.displayMsg("You are now watching: " + selectedMovie);
 
         // Sørg for at bruge brugerens rigtige filnavn (brug currentUser.getUsername())
-        String fileName = "UserData" + File.separator + user.getUsername() + "_watched.txt";
+        String fileName = "UserData" + File.separator + currentUser.getUsername() + "_watched.txt";
         File userWatchedFile = new File(fileName);
 
         // Sørg for at oprette filen, hvis den ikke allerede findes
@@ -213,6 +228,7 @@ public class Streaming {
             System.out.println("An error occurred while saving the movie: " + e.getMessage());
         }
     }
+
 
 
 }

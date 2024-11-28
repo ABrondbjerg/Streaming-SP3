@@ -187,11 +187,11 @@ public class Display {
 
             FileIO io = new FileIO();
             Streaming streaming = new Streaming();
-            User currentUser = getCurrentUser(); // Sørg for at få den korrekte bruger her.
+            User currentUser = Streaming.getCurrentUser(); // Sørg for at få den korrekte bruger her.
 
             switch (actionChoice) {
                 case 1:
-                    streaming.playMovie(selectedMovie.getTitle(), currentUser);
+                    streaming.playMovie("", currentUser);
                     break;
                 case 2:
                     io.saveMovieToFile(selectedMovie);
