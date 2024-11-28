@@ -129,7 +129,7 @@ public class Streaming {
         }
     }
 
-    private static void userFileWatched(User user) {
+    private static void userFileWatched(User user) throws IOException {
 
         String directoryPath = "UserData";
         File directory = new File(directoryPath);
@@ -137,17 +137,11 @@ public class Streaming {
         String fileName = directory + File.separator + user.getUsername() + "_watched.txt";
         File userWatchedFile = new File(fileName);
 
-        try (Writer writer = new FileWriter(userWatchedFile)) {
-            writer.write("Username: " + user.getUsername() + "\n");
-            writer.write("Watched Movies: ");
-            // System.out.println("User file created: " + userWatchedFile.getAbsolutePath());
+        Writer writer = new FileWriter(userWatchedFile);
 
-        } catch (IOException e) {
-            System.out.println("An error occurred while saving the user file.");
-        }
     }
 
-    private static void userFileSaved(User user) {
+    private static void userFileSaved(User user) throws IOException {
 
         String directoryPath = "UserData";
         File directory = new File(directoryPath);
@@ -155,12 +149,8 @@ public class Streaming {
         String fileName = directory + File.separator + user.getUsername() + "_saved.txt";
         File userWatchedFile = new File(fileName);
 
-        try (Writer writer = new FileWriter(userWatchedFile)) {
+        Writer writer = new FileWriter(userWatchedFile);
 
-
-        } catch (IOException e) {
-            System.out.println("An error occurred while saving the user file.");
-        }
     }
 
 
@@ -205,7 +195,7 @@ public class Streaming {
         }
     }
 
-    public void playMovie(String selectedMovie, User currentUser) throws IOException {
+    public static void playMovie(String selectedMovie, User currentUser) throws IOException {
         TextUI textUI = new TextUI();
         textUI.displayMsg("You are now watching: " + selectedMovie);
 
@@ -226,28 +216,7 @@ public class Streaming {
         }
     }
 
-    public static void saveMovieToFile(String selectedMovie, User currentUser) throws IOException {
-        TextUI textUI = new TextUI();
-        textUI.displayMsg("You saved: " + selectedMovie + "To 'My List'");
-
-        // Sørg for at bruge brugerens rigtige filnavn (brug currentUser.getUsername())
-        String fileName = "UserData" + File.separator + Streaming.currentUser.getUsername() + "_saved.txt";
-        File userSavedFile = new File(fileName);
-
-        // Sørg for at oprette filen, hvis den ikke allerede findes
-        if (!userSavedFile.exists()) {
-            userSavedFile.createNewFile();
-        }
-
-        try (FileWriter writer = new FileWriter(userSavedFile, true)) { // Appender til filen
-            writer.write(selectedMovie + "\n");
-            System.out.println("Movie saved to your watched list: " + selectedMovie);
-        } catch (IOException e) {
-            System.out.println("An error occurred while saving the movie: " + e.getMessage());
-        }
-    }
-
-    public static void displaySavedMovie() {
+    public static void displaySavedMovie() throws IOException {
         // Construct the file path
         String userFilePath = "UserData" + File.separator + currentUser.getUsername() + "_saved.txt";
 
@@ -265,7 +234,7 @@ public class Streaming {
             System.out.println((i + 1) + ": " + movies.get(i)); // Using toString() for formatted output
         }
 
-        System.out.print("Enter the movie number to add to your list: ");
+        System.out.print("Select a movie by number: ");
         int movieIndex = scanner.nextInt(); // User input
         int adjustedIndex = movieIndex - 1; // Adjust for 0-based indexing
 
@@ -275,14 +244,15 @@ public class Streaming {
         }
 
         Movie selectedMovie = movies.get(adjustedIndex); // Get selected movie
+        Streaming.playMovie(String.valueOf(selectedMovie),currentUser);
         // Add the movie to myList
         myList.add(selectedMovie);
         // Save the updated list to the user's file
-        FileIO.saveMovieToFile(); // Uses dynamic file path internally
+        FileIO.saveMovieToFile(selectedMovie); // Uses dynamic file path internally
         System.out.println("Added movie: " + selectedMovie.getTitle());
     }
 
-    public static void displayWatchedMovie() {
+    public static void displayWatchedMovie() throws IOException {
         // Construct the file path
         String userFilePath = "UserData" + File.separator + currentUser.getUsername() + "_watched.txt";
 
@@ -308,14 +278,47 @@ public class Streaming {
             return;
         }
 
-        Movie selectedMovie = movies.get(adjustedIndex); // Get selected movie
-        // Add the movie to myList
-        myList.add(selectedMovie);
-        // Save the updated list to the user's file
-        FileIO.saveMovieToFile(); // Uses dynamic file path internally
-        System.out.println("Added movie: " + selectedMovie.getTitle());
-    }
+        Movie selectedMovie = movies.get(movieIndex - 1);
+        System.out.println("You selected: " + selectedMovie.getTitle() + " (" + selectedMovie.getYear() + ")");
 
+        // Menu for handling af den valgte film
+        boolean stayInMenu = true;
+        while (stayInMenu) {
+            System.out.println("\nWhat would you like to do?");
+            System.out.println("1. Play movie");
+            System.out.println("2. delete movie from your list");
+            System.out.println("3. Return to main menu");
+            System.out.print("Enter your choice: ");
+            int actionChoice = scanner.nextInt();
+
+            switch (actionChoice) {
+                case 1:
+                    // Afspil filmen
+                    Streaming streaming = new Streaming();
+                    User currentUser = Streaming.getCurrentUser(); // Antag, at denne metode findes
+                    streaming.playMovie(String.valueOf(selectedMovie), currentUser);
+                    break;
+
+                case 2:
+                    // slet filmen i brugerens liste
+                    Streaming streaming2 = new Streaming();
+                    User currentUser2 = Streaming.getCurrentUser();
+                    streaming2.movieDeletion();
+                    System.out.println(selectedMovie.getTitle() + " has been saved!");
+                    break;
+
+                case 3:
+                    // Exit til hovedmenu
+                    stayInMenu = false;
+                    System.out.println("Returning to main menu.");
+                    Display.displayMenu(); // Antager, at displayMenu() findes
+                    break;
+
+                default:
+                    System.out.println("Invalid option. Please choose again.");
+            }
+        }
+    }
 
     public static void movieDeletion() {
         String userFilePath = "UserData" + File.separator + currentUser.getUsername() + "_saved.txt";

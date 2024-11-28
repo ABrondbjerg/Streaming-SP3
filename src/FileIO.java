@@ -20,19 +20,20 @@ public class FileIO {
         return data;
     }
 
-    public static void saveMovieToFile() {
+    public static void saveMovieToFile(Movie movie) {
         // Construct the file path based on the current user's username
         String userFilePath = "UserData" + File.separator + Streaming.getCurrentUser().getUsername() + "_saved.txt";
 
         try (FileWriter writer = new FileWriter(userFilePath, true)) {
             // Iterate through the movie list and write each movie with the correct index
-            for (Movie movie : Streaming.myList) {
+
                 // Write movie with semicolons between fields, as expected in the file
+                System.out.println("Mac er altså godt");
                 writer.write(movie.getTitle() + "; "
                         + movie.getYear() + "; "
                         + movie.getCategories() + "; "
                         + String.format("%.1f", movie.getRating()).replace('.', ',') + ";\n");  // Format rating and replace dot with comma
-            }
+
             System.out.println("Movies saved to " + userFilePath);
         } catch (IOException e) {
             System.out.println("Error saving movies to file: " + e.getMessage());
@@ -45,26 +46,43 @@ public class FileIO {
         ArrayList<Movie> movies = new ArrayList<>();
         File file = new File(filePath);
 
-        // Kontrollerer om filen eksisterer
-        if (!file.exists()) {
-            System.out.println("No saved movies found at: " + filePath);
-            return movies; // Returnerer en tom liste
-        }
+        try (Scanner scanner = new Scanner(file)) {
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                // Trim linjen for at fjerne unødvendige mellemrum
-                line = line.trim();
-                if (!line.isEmpty()) { // Undgå at tilføje tomme linjer
-                    movies.add(new Movie(line)); // Brug den nye konstruktør
+            // Skip the first two lines (username and password)
+
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine().trim();
+
+                // Remove trailing semicolon if present and replace commas in ratings with periods
+                if (line.endsWith(";")) {
+                    line = line.substring(0, line.length() - 1);
+                }
+                line = line.replace(',', '.');  // Convert rating commas back to dots
+
+                String[] parts = line.split(";");
+                String[] categoryParts = line.split(",");// Split by semicolons
+
+                if (parts.length == 4) {  // There should be 4 fields (title, year, categories, rating)
+                    try {
+                        String title = parts[0].trim();
+                        String year = parts[1].trim();
+                        List <String> categories = List.of(categoryParts);
+                        float rating = Float.parseFloat(parts[3].trim());
+
+                        // Create a Movie object and add it to the list
+                        movies.add(new Movie(title, year, categories, rating));
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid number format in line: " + line);
+                    }
+                } else {
+                    System.out.println("Invalid format (unexpected number of fields) in line: " + line);
                 }
             }
-        } catch (IOException e) {
-            System.out.println("Error reading movie data: " + e.getMessage());
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found: " + filePath);
         }
 
-        return movies; // Returnerer listen over film
+        return movies;
     }
 
 
