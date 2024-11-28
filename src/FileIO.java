@@ -20,54 +20,54 @@ public class FileIO {
         return data;
     }
 
-    public static void saveMovieToFile() {
+    public static void saveMovieToFile(Movie movie) {
         // Construct the file path based on the current user's username
         String userFilePath = "UserData" + File.separator + Streaming.getCurrentUser().getUsername() + "_saved.txt";
 
         try (FileWriter writer = new FileWriter(userFilePath, true)) {
             // Iterate through the movie list and write each movie with the correct index
-            for (Movie movie : Streaming.myList) {
+
                 // Write movie with semicolons between fields, as expected in the file
                 writer.write(movie.getTitle() + "; "
                         + movie.getYear() + "; "
                         + movie.getCategories() + "; "
                         + String.format("%.1f", movie.getRating()).replace('.', ',') + ";\n");  // Format rating and replace dot with comma
-            }
-            System.out.println("Movies saved to " + userFilePath);
+
         } catch (IOException e) {
             System.out.println("Error saving movies to file: " + e.getMessage());
         }
     }
+        public static ArrayList<Movie> readMovieData(String filePath) throws IOException {
+            ArrayList<Movie> movies = new ArrayList<>();
+            File file = new File(filePath);
+            try (Scanner scanner = new Scanner(file)) {
+                while (scanner.hasNextLine()) {
+                    String line = scanner.nextLine();
+                    String[] fields = line.split(";");
+                    String[] fields2 = line.split(",");
 
+                    // Validate the number of fields
+                    if (fields.length == 4) {
+                        // Assuming fields are title, year, genre, and rating
+                        String title = fields[0].trim(); // Titlen
+                        String year = fields[1].trim();  // År
+                        String categoryString = fields[2].trim(); // Kategorier
+                        String ratingString = fields[3].trim();  // Rating
+                        ratingString = ratingString.replace(',', '.');
+                        double rating = Double.parseDouble(ratingString);
 
+                        categoryString = categoryString.replace("[", "").replace("]", "");
+                        List<String> categories = List.of(categoryString.split(",\\s*"));
 
-    public static ArrayList<Movie> readMovieData(String filePath) {
-        ArrayList<Movie> movies = new ArrayList<>();
-        File file = new File(filePath);
-
-        // Kontrollerer om filen eksisterer
-        if (!file.exists()) {
-            System.out.println("No saved movies found at: " + filePath);
-            return movies; // Returnerer en tom liste
-        }
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                // Trim linjen for at fjerne unødvendige mellemrum
-                line = line.trim();
-                if (!line.isEmpty()) { // Undgå at tilføje tomme linjer
-                    movies.add(new Movie(line)); // Brug den nye konstruktør
+                        Movie movie = new Movie(title, year, categories, rating);
+                        movies.add(movie);
+                    } else {
+                        System.out.println("Invalid format in line: " + line);
+                    }
                 }
             }
-        } catch (IOException e) {
-            System.out.println("Error reading movie data: " + e.getMessage());
+            return movies;
         }
-
-        return movies; // Returnerer listen over film
-    }
-
-
 
 
     static void updateUserFile(ArrayList<Movie> movies, String userFilePath) {

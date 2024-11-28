@@ -35,7 +35,7 @@ public class Display {
 
     }
 
-    private static void displayMyListMenu() {
+    private static void displayMyListMenu() throws IOException {
         Scanner scan = new Scanner(System.in);
         while (true) {
             System.out.println("\n--- My List Menu ---");
@@ -57,7 +57,7 @@ public class Display {
         }
     }
 
-    private static void displayWatchedMoviesMenu() {
+    private static void displayWatchedMoviesMenu() throws IOException {
         Scanner scan = new Scanner(System.in);
         while (true) {
             System.out.println("\n--- Watched Movie Menu ---");
@@ -135,12 +135,12 @@ public class Display {
 
                 switch (actionChoice) {
                     case 1:
-                        streaming.playMovie(selectedMovie.getTitle(), currentUser);
+                        streaming.playMovie(String.valueOf(selectedMovie), currentUser);
                         break;
                     case 2:
                         // Gem filmen (forudsat at metoden allerede findes)
-                        Streaming.saveMovieToFile(selectedMovie.getTitle(), currentUser);
-                        System.out.println(selectedMovie.getTitle() + " has been saved!");
+                        FileIO.saveMovieToFile(selectedMovie);
+                        System.out.println(selectedMovie + " has been saved!");
                         break;
                     case 3:
                         // Exit til hovedmenu
